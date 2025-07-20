@@ -60,7 +60,10 @@ def display_feedback(correct, user_action, correct_action, explanation):
         print(f"Your answer: {action_name(user_action)}")
         print(f"\nExplanation: {explanation}")
     
-    input("\nPress Enter to continue...")
+    response = input("\nPress Enter to continue, or q to quit: ").strip().lower()
+    if response in ['q', 'quit']:
+        return 'quit'
+    return 'continue'
 
 def display_session_header(mode):
     mode_names = {

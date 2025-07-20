@@ -140,8 +140,8 @@ class TrainingSession:
         correct = self.check_answer(user_action, correct_action)
         explanation = self.strategy.get_explanation(hand_type, player_total, dealer_card)
         
-        display_feedback(correct, user_action, correct_action, explanation)
-        return correct
+        response = display_feedback(correct, user_action, correct_action, explanation)
+        return correct, response
     
     def run(self, stats):
         display_session_header(self.mode)
@@ -170,7 +170,7 @@ class TrainingSession:
                 break
             
             correct_action = self.strategy.get_correct_action(hand_type, player_total, dealer_card)
-            correct = self.show_feedback(scenario, user_action, correct_action)
+            correct, response = self.show_feedback(scenario, user_action, correct_action)
             
             # Record statistics
             dealer_strength = stats.get_dealer_strength(dealer_card)
@@ -181,6 +181,10 @@ class TrainingSession:
             if correct:
                 self.correct_count += 1
             self.total_count += 1
+            
+            # Check if user wants to quit
+            if response == 'quit':
+                break
         
         # Show session summary
         if self.total_count > 0:
