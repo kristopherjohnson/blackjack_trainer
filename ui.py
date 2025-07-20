@@ -23,7 +23,8 @@ def display_hand(player_cards, dealer_card, hand_type, player_total):
     if hand_type == 'pair':
         card_val = player_cards[0]
         card_display = card_name(card_val)
-        print(f"Your hand: {card_display}, {card_display} (Pair of {card_display}s)")
+        print(
+            f"Your hand: {card_display}, {card_display} (Pair of {card_display}s)")
     else:
         card_str = ", ".join([card_name(card) for card in player_cards])
         total_type = "Soft" if hand_type == 'soft' else "Hard"
@@ -69,7 +70,8 @@ def display_feedback(correct, user_action, correct_action, explanation):
         print(f"Your answer: {action_name(user_action)}")
         print(f"\nExplanation: {explanation}")
 
-    response = input("\nPress Enter to continue, or q to quit: ").strip().lower()
+    response = input(
+        "\nPress Enter to continue, or q to quit: ").strip().lower()
     if response in ['q', 'quit']:
         return 'quit'
     return 'continue'

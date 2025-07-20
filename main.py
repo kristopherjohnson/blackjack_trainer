@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from trainer import TrainingSession
+from trainer import (RandomTrainingSession, DealerGroupTrainingSession,
+                     HandTypeTrainingSession, AbsoluteTrainingSession)
 from ui import display_menu
 from stats import Statistics
 
@@ -15,16 +16,16 @@ def main():
         choice = display_menu()
 
         if choice == 1:
-            session = TrainingSession('random', 'normal')
+            session = RandomTrainingSession('normal')
             session.run(stats)
         elif choice == 2:
-            session = TrainingSession('dealer_groups', 'normal')
+            session = DealerGroupTrainingSession('normal')
             session.run(stats)
         elif choice == 3:
-            session = TrainingSession('hand_types', 'normal')
+            session = HandTypeTrainingSession('normal')
             session.run(stats)
         elif choice == 4:
-            session = TrainingSession('absolutes', 'easy')
+            session = AbsoluteTrainingSession('easy')
             session.run(stats)
         elif choice == 5:
             stats.display_progress()

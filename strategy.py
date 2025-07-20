@@ -198,7 +198,8 @@ class StrategyChart:
 
         if dealer_card in self.dealer_groups['weak']:
             return self.mnemonics['dealer_weak']
-        if player_total in range(13, 17) and dealer_card in self.dealer_groups['strong']:
+        if player_total in range(
+                13, 17) and dealer_card in self.dealer_groups['strong']:
             return self.mnemonics['teens_vs_strong']
         return "Follow basic strategy patterns"
 
