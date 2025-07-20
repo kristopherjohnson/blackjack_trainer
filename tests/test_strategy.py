@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from strategy import StrategyChart  # pylint: disable=wrong-import-position
+from trainer.strategy import StrategyChart  # pylint: disable=wrong-import-position
 
 
 class TestStrategyChart(unittest.TestCase):  # pylint: disable=too-many-public-methods

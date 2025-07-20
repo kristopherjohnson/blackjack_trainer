@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from trainer import (RandomTrainingSession, DealerGroupTrainingSession,
-                     HandTypeTrainingSession, AbsoluteTrainingSession)
-from ui import display_menu
-from stats import Statistics
+from .trainer import (RandomTrainingSession, DealerGroupTrainingSession,
+                      HandTypeTrainingSession, AbsoluteTrainingSession)
+from .ui import display_menu
+from .stats import Statistics
 
 
 def main():

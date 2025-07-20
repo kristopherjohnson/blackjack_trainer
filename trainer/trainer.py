@@ -1,8 +1,8 @@
 import random
 from abc import ABC, abstractmethod
-from strategy import StrategyChart
-from ui import (display_session_header, display_hand, get_user_action,
-                display_feedback, display_dealer_groups, display_hand_types)
+from .strategy import StrategyChart
+from .ui import (display_session_header, display_hand, get_user_action,
+                 display_feedback, display_dealer_groups, display_hand_types)
 
 
 class TrainingSession(ABC):
