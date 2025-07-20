@@ -6,7 +6,7 @@ The trainer must use the strategy given in @blackjack_basic_strategy.md
 
 ## Development Workflow
 
-After any series of changes to Python files, or when asked to "perform
+After any series of changes to Python files, or when asked to "run
 pre-commit checks", perform these steps to ensure the code is in good shape:
 
 1. Run `pylint` and address any issues, and if necessary, update .pylintrc with any new rules

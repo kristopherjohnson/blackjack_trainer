@@ -109,8 +109,6 @@ class TrainingSession(ABC):
             print(f"\nSession complete! Final score: {self.correct_count}/"
                   f"{self.total_count} ({accuracy:.1f}%)")
 
-        input("Press Enter to return to main menu...")
-
 
 class RandomTrainingSession(TrainingSession):
     """Random practice session with all hand types and dealer cards."""
