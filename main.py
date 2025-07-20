@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
 from trainer import TrainingSession
-from ui import display_menu, get_user_choice
+from ui import display_menu
 from stats import Statistics
+
 
 def main():
     print("Blackjack Basic Strategy Trainer")
     print("=" * 40)
-    
+
     stats = Statistics()
-    
+
     while True:
         choice = display_menu()
-        
+
         if choice == 1:
             session = TrainingSession('random', 'normal')
             session.run(stats)
@@ -32,6 +33,7 @@ def main():
             break
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
