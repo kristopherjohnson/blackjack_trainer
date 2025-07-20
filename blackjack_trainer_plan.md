@@ -39,9 +39,9 @@ Build a terminal-based Python program for macOS to help memorize blackjack basic
 ### File Structure
 ```
 blackjack_trainer/
-├── trainer/                    # Main package directory
+├── bjst/                      # Main package directory (BlackJack Strategy Trainer)
 │   ├── __init__.py            # Package initialization and exports
-│   ├── __main__.py            # Entry point for `python3 trainer`
+│   ├── __main__.py            # Entry point for `python3 bjst`
 │   ├── main.py                # Main application logic
 │   ├── strategy.py            # Strategy chart data and lookup
 │   ├── trainer.py             # Training session classes (inheritance-based)
@@ -267,14 +267,40 @@ The blackjack strategy trainer is packaged as a Python module and can be execute
 
 ```bash
 # From the project root directory
-python3 trainer
+python3 bjst
 ```
 
 This will start the interactive training session with the main menu.
 
+#### Command-line Options
+You can also specify the session type directly via command-line arguments:
+
+```bash
+# Run specific session types directly
+python3 bjst --session random          # Quick practice
+python3 bjst --session dealer          # Dealer strength groups
+python3 bjst --session hand            # Hand type focus
+python3 bjst --session absolute        # Absolutes drill
+
+# Specify difficulty level
+python3 bjst --session random --difficulty easy
+python3 bjst -s absolute -d hard
+
+# Show help
+python3 bjst --help
+```
+
+Available session types:
+- `random`: Mixed practice with all hand types and dealer cards
+- `dealer`: Practice by dealer strength groups (weak/medium/strong)
+- `hand`: Focus on specific hand types (hard/soft/pairs)
+- `absolute`: Practice absolute rules (always/never scenarios)
+
+Available difficulty levels: `easy`, `normal` (default), `hard`
+
 ### Package Structure Benefits
 - **Professional organization**: Standard Python package layout
-- **Easy execution**: Single command to run the trainer
+- **Easy execution**: Single command to run the trainer (`python3 bjst`)
 - **Modular design**: Clear separation of concerns with inheritance-based session types
 - **Extensible**: Easy to add new training modes by creating new subclasses
 

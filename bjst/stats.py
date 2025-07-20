@@ -1,4 +1,20 @@
 class Statistics:
+    """Statistics tracking for blackjack strategy training sessions.
+
+    This class tracks performance metrics during training sessions, including:
+    - Overall accuracy (correct answers / total attempts)
+    - Accuracy by hand type (hard totals, soft totals, pairs)
+    - Accuracy by dealer strength (weak, medium, strong dealer cards)
+
+    Dealer strength categories:
+    - Weak: 4, 5, 6 (dealer bust cards)
+    - Medium: 2, 3, 7, 8 (moderate dealer cards)
+    - Strong: 9, 10, A (strong dealer cards)
+
+    The statistics are maintained for the current session and can be displayed
+    to show the user's progress and identify areas for improvement.
+    """
+
     def __init__(self):
         self.session_data = {
             'total_attempts': 0,

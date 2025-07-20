@@ -22,11 +22,53 @@ A terminal-based Python program for macOS to help memorize blackjack basic strat
 
 ## Running the Program
 
-To start the interactive blackjack strategy trainer:
+The blackjack strategy trainer is packaged as a Python module and can be executed in multiple ways:
+
+### Interactive Mode (Default)
+
+Start the interactive trainer with the main menu:
 
 ```bash
-python3 main.py
+python3 bjst
 ```
+
+### Command-line Mode
+
+Run specific session types directly via command-line arguments:
+
+```bash
+# Quick practice (random scenarios)
+python3 bjst --session random
+
+# Learn by dealer strength groups
+python3 bjst --session dealer
+
+# Focus on specific hand types
+python3 bjst --session hand
+
+# Practice absolute rules
+python3 bjst --session absolute
+
+# Specify difficulty level
+python3 bjst --session random --difficulty easy
+python3 bjst -s absolute -d hard
+
+# Show help and all options
+python3 bjst --help
+```
+
+#### Available Options
+
+- `--session, -s`: Choose session type
+  - `random`: Mixed practice with all scenarios
+  - `dealer`: Practice by dealer strength (weak/medium/strong)
+  - `hand`: Focus on hand types (hard/soft/pairs)
+  - `absolute`: Practice absolute rules (always/never)
+
+- `--difficulty, -d`: Set difficulty level
+  - `easy`: Simpler scenarios
+  - `normal`: Standard difficulty (default)
+  - `hard`: More challenging scenarios
 
 ### Menu Options
 
@@ -96,17 +138,23 @@ All tests should pass, confirming that the strategy chart matches standard black
 
 ```
 blackjack_trainer/
-├── main.py              # Main program entry point
-├── strategy.py          # Strategy chart data and lookup
-├── trainer.py           # Practice session logic
-├── ui.py               # Terminal interface utilities
-├── stats.py            # Statistics tracking
-├── tests/              # Unit tests
-│   ├── __init__.py
-│   └── test_strategy.py
-├── README.md           # This file
-├── CLAUDE.md           # Project instructions
-└── blackjack_trainer_plan.md  # Implementation plan
+├── bjst/                      # Main package directory
+│   ├── __init__.py            # Package initialization and exports
+│   ├── __main__.py            # Entry point for `python3 bjst`
+│   ├── main.py                # Main application logic
+│   ├── strategy.py            # Strategy chart data and lookup
+│   ├── trainer.py             # Training session classes (inheritance-based)
+│   ├── ui.py                  # Terminal interface utilities
+│   └── stats.py               # Statistics tracking
+├── tests/                     # Unit tests
+│   └── test_strategy.py       # Strategy chart validation tests
+├── .pylintrc                  # Code quality configuration
+├── .gitignore                 # Git ignore patterns
+├── LICENSE                    # MIT license
+├── README.md                  # This file
+├── CLAUDE.md                  # Development workflow
+├── blackjack_basic_strategy.md    # Official strategy reference
+└── blackjack_trainer_plan.md     # Implementation plan
 ```
 
 ## Strategy Rules

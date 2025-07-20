@@ -1,4 +1,30 @@
 class StrategyChart:
+    """Complete blackjack basic strategy chart implementation.
+
+    This class encapsulates the optimal basic strategy for blackjack based on
+    standard casino rules: 4-8 decks, dealer stands on soft 17, double after
+    split allowed, surrender not allowed.
+
+    The strategy chart covers three main categories:
+    - Hard totals (5-21): Hands without aces or where ace counts as 1
+    - Soft totals (13-21): Hands with ace counting as 11 (A,2 through A,9)
+    - Pairs (2,2 through A,A): Identical card pairs for split decisions
+
+    Action codes:
+    - H: Hit (take another card)
+    - S: Stand (keep current total)
+    - D: Double down (double bet, take exactly one more card)
+    - Y: Split (for pairs - split into two separate hands)
+
+    The class also provides:
+    - Explanatory mnemonics for learning key patterns
+    - Dealer strength groupings (weak/medium/strong)
+    - Absolute rule identification for never/always scenarios
+
+    All strategy decisions are based on mathematically optimal play that
+    minimizes the house edge over the long term.
+    """
+
     def __init__(self):
         self.hard_totals = self._build_hard_totals()
         self.soft_totals = self._build_soft_totals()

@@ -4,7 +4,7 @@ A terminal-based Python program for learning blackjack basic strategy.
 """
 
 __version__ = "1.0.0"
-__author__ = "Blackjack Strategy Trainer"
+__author__ = "Kristopher Johnson"
 
 from .trainer import (
     TrainingSession,
