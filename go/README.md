@@ -198,13 +198,6 @@ go run main.go -session hand -difficulty hard
 go run main.go -session dealer
 ```
 
-## Performance
-
-- **Compile time:** ~1-2 seconds
-- **Binary size:** ~6-8 MB (statically linked)
-- **Memory usage:** Minimal (~2-3 MB runtime)
-- **Startup time:** Instant
-
 ## Go-Specific Features
 
 - **Interfaces:** Clean separation using Go interfaces for training sessions

@@ -181,13 +181,6 @@ cargo run -- --session hand --difficulty hard
 cargo run -- --session dealer
 ```
 
-## Performance
-
-- **Compile time:** ~3-5 seconds (debug), ~10-15 seconds (release)
-- **Binary size:** ~2-3 MB (release with optimizations)
-- **Memory usage:** Minimal (~1-2 MB runtime)
-- **Startup time:** Instant
-
 ## Compatibility
 
 - **Operating Systems:** macOS, Linux, Windows

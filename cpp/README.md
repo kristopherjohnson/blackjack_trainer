@@ -169,8 +169,8 @@ The test suite includes:
 
 The project automatically downloads and configures its dependencies:
 
-- **CLI11** (v2.3.2): Modern command-line parser for C++11
-- **doctest** (v2.4.8): Fast C++ testing framework
+- **CLI11**: Modern command-line parser for C++11
+- **doctest**: Fast C++ testing framework
 
 No manual dependency installation is required - CMake handles everything automatically.
 
@@ -239,24 +239,6 @@ cpp/
    # Make the binary executable
    chmod +x blackjack_trainer
    ```
-
-## Performance
-
-The C++ version provides:
-- **Fast startup**: Minimal initialization overhead
-- **Low memory usage**: Efficient data structures
-- **Responsive UI**: Immediate user input handling
-- **Quick compilation**: Typical build time under 10 seconds
-
-## Contributing
-
-When contributing to the C++ implementation:
-
-1. Follow the existing code style and naming conventions
-2. Add unit tests for new functionality
-3. Ensure all tests pass before submitting
-4. Use modern C++17 features appropriately
-5. Maintain cross-platform compatibility
 
 ## License
 
