@@ -7,6 +7,7 @@ on:
       - 'bjst/**'
       - 'tests/**'
       - '.pylintrc'
+      - 'requirements.txt'
       - '.github/workflows/python.yml'
   pull_request:
     branches: [ main, develop ]
@@ -14,7 +15,9 @@ on:
       - 'bjst/**'
       - 'tests/**'
       - '.pylintrc'
+      - 'requirements.txt'
       - '.github/workflows/python.yml'
+  workflow_call:
 
 jobs:
   test:
