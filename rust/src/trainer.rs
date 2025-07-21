@@ -74,8 +74,7 @@ pub trait TrainingSession {
         if total_count > 0 {
             let accuracy = (correct_count as f64 / total_count as f64) * 100.0;
             println!(
-                "\nSession complete! Final score: {}/{} ({:.1}%)",
-                correct_count, total_count, accuracy
+                "\nSession complete! Final score: {correct_count}/{total_count} ({accuracy:.1}%)"
             );
         }
     }

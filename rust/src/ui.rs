@@ -21,7 +21,7 @@ pub fn display_menu() -> Option<u8> {
 /// Display session header with mode name.
 pub fn display_session_header(mode_name: &str) {
     println!("\n{}", "=".repeat(40));
-    println!("Training Mode: {}", mode_name);
+    println!("Training Mode: {mode_name}");
     println!("{}", "=".repeat(40));
     println!("(Press 'q' + Enter to quit at any time)");
 }
@@ -39,7 +39,7 @@ pub fn display_hand(player_cards: &[u8], dealer_card: u8, hand_type: &str, playe
     }
 
     let hand_desc = hand_type.chars().next().unwrap().to_uppercase().to_string() + &hand_type[1..];
-    println!(" ({} {})", hand_desc, player_total);
+    println!(" ({hand_desc} {player_total})");
 }
 
 /// Get user's action choice.
@@ -79,7 +79,7 @@ pub fn display_feedback(
         println!("\n❌ Incorrect!");
         println!("\nCorrect answer: {}", action_to_string(correct_action));
         println!("Your answer: {}", action_to_string(user_action));
-        println!("\nPattern: {}", explanation);
+        println!("\nPattern: {explanation}");
     }
 
     print!("\nPress Enter to continue (or 'q' + Enter to quit): ");
