@@ -131,7 +131,8 @@ TEST_CASE("Hand generation produces valid card combinations") {
 
     for (int iteration = 0; iteration < 200;
          ++iteration) { // Many iterations to catch rare cases
-      for (const std::string &hand_type : {"hard", "soft", "pair"}) {
+      std::vector<std::string> hand_types = {"hard", "soft", "pair"};
+      for (const std::string &hand_type : hand_types) {
         std::vector<int> totals;
 
         if (hand_type == "pair") {
