@@ -85,7 +85,7 @@ fn main() {
         if let Some(mut session) = create_session(session_type, difficulty) {
             session.run(&mut stats);
         } else {
-            println!("Invalid session type: {}", session_type);
+            println!("Invalid session type: {session_type}");
             std::process::exit(1);
         }
         return;
