@@ -39,8 +39,31 @@ class TrainingSession(ABC):
         # hard
         if player_total <= 11:
             return [player_total]
+        # Generate two valid cards (2-10) that sum to player_total
         first_card = random.randint(2, min(10, player_total - 2))
         second_card = player_total - first_card
+
+        # If second card would be > 10, we need more cards
+        if second_card > 10:
+            # For totals > 20, generate 3+ cards
+            cards = [first_card]
+            remaining = player_total - first_card
+
+            while remaining > 10:
+                # Take a card between 2 and min(10, remaining-2) to ensure we can finish
+                max_card = min(10, remaining - 2)
+                if max_card < 2:
+                    break
+                card = random.randint(2, max_card)
+                cards.append(card)
+                remaining -= card
+
+            if remaining >= 2:
+                cards.append(remaining)
+            return cards
+        if second_card < 2:
+            # If second card would be < 2, just use single card
+            return [player_total]
         return [first_card, second_card]
 
     def check_answer(self, user_action, correct_action):

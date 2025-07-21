@@ -1,0 +1,29 @@
+[package]
+name = "blackjack_trainer"
+version = "1.0.0"
+edition = "2021"
+authors = ["Kristopher Johnson"]
+description = "Blackjack Basic Strategy Trainer - Learn optimal blackjack strategy"
+license = "MIT"
+
+[[bin]]
+name = "blackjack_trainer"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive"] }
+rand = "0.8"
+crossterm = "0.27"
+
+[dev-dependencies]
+# No additional test dependencies needed - using built-in test framework
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true

@@ -46,6 +46,7 @@ confidence=
 disable=missing-module-docstring,
         missing-class-docstring,
         missing-function-docstring,
+        too-many-branches,
         raw-checker-failed,
         bad-inline-option,
         locally-disabled,
