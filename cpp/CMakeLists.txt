@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 project(BlackjackTrainer
     VERSION 1.0.0
@@ -11,7 +11,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
+endif()
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 else()
@@ -44,7 +49,7 @@ if(NOT doctest_FOUND)
     FetchContent_Declare(
         doctest
         GIT_REPOSITORY https://github.com/doctest/doctest.git
-        GIT_TAG v2.4.8
+        GIT_TAG v2.4.12
         GIT_SHALLOW TRUE
     )
     FetchContent_MakeAvailable(doctest)
@@ -58,7 +63,7 @@ if(NOT CLI11_FOUND)
     FetchContent_Declare(
         CLI11
         GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
-        GIT_TAG v2.3.2
+        GIT_TAG v2.4.2
         GIT_SHALLOW TRUE
     )
     FetchContent_MakeAvailable(CLI11)
