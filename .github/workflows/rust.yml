@@ -1,0 +1,66 @@
+name: Rust Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'rust/**'
+      - '.github/workflows/rust.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'rust/**'
+      - '.github/workflows/rust.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache cargo dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          rust/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('rust/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
+
+    - name: Check code formatting
+      working-directory: rust
+      run: |
+        cargo fmt --check
+
+    - name: Run clippy
+      working-directory: rust
+      run: |
+        cargo clippy -- -D warnings
+
+    - name: Build
+      working-directory: rust
+      run: |
+        cargo build --verbose
+
+    - name: Run tests
+      working-directory: rust
+      run: |
+        cargo test --verbose
+
+    - name: Build release
+      working-directory: rust
+      run: |
+        cargo build --release
+
+    - name: Test executable
+      working-directory: rust
+      run: |
+        ./target/release/blackjack_trainer --help

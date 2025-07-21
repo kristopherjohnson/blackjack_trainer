@@ -1,0 +1,15 @@
+# Python dependencies for blackjack strategy trainer
+# Development and testing tools
+
+# Code formatting
+autopep8>=2.0.0
+
+# Code quality and linting
+pylint>=2.15.0
+
+# Testing framework (optional - unittest is built-in)
+pytest>=7.0.0
+
+# Note: The blackjack strategy trainer uses only Python standard library
+# for its core functionality. These dependencies are for development,
+# testing, and code quality purposes only.

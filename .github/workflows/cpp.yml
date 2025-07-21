@@ -1,0 +1,55 @@
+name: C++ Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'cpp/**'
+      - '.github/workflows/cpp.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'cpp/**'
+      - '.github/workflows/cpp.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential clang-format
+
+    - name: Check code formatting
+      working-directory: cpp
+      run: |
+        find include/ src/ tests/ \( -name "*.cpp" -o -name "*.h" \) -print0 2>/dev/null | xargs -0 clang-format --dry-run --Werror
+
+    - name: Create build directory
+      working-directory: cpp
+      run: |
+        mkdir -p build
+
+    - name: Configure with CMake
+      working-directory: cpp/build
+      run: |
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
+
+    - name: Build
+      working-directory: cpp/build
+      run: |
+        make -j$(nproc)
+
+    - name: Run tests
+      working-directory: cpp/build
+      run: |
+        ctest --verbose
+
+    - name: Test executable
+      working-directory: cpp/build
+      run: |
+        ./blackjack_trainer --help
