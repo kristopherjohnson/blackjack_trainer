@@ -17,7 +17,7 @@ The Python implementation follows a clean, object-oriented design with:
 Following the original Python implementation's design philosophy, this iOS app uses **session-only statistics** rather than persistent historical data:
 
 - **Temporary by design**: Statistics exist only for the current session, just like the terminal-based trainer
-- **Suspension preservation**: Session data is preserved during app suspension (not termination) for up to 1 hour
+- **Pure session-based**: Statistics reset when app terminates, just like the terminal trainer
 - **Clean slate approach**: Each new session starts fresh, encouraging focused practice
 - **Privacy first**: No long-term data collection or storage
 - **Simplicity**: Eliminates complex database management and data migration concerns
@@ -619,50 +619,16 @@ class StatisticsManager: ObservableObject {
     @Published var currentSessionStats = SessionStats()
     @Published var sessionHistory: [SessionResult] = [] // Temporary in-memory only
     
-    private let userDefaults = UserDefaults.standard
-    private let sessionKey = "BlackjackTrainerActiveSession"
-    private let sessionTimeoutKey = "BlackjackTrainerSessionTimeout"
-    private let sessionTimeout: TimeInterval = 3600 // 1 hour
-    
-    init() {
-        restoreActiveSession()
-    }
+    // Pure session-based - no restoration needed
     
     func recordAttempt(handType: HandType, dealerStrength: DealerStrength, isCorrect: Bool) {
         // Only update current session stats (no persistent history)
         currentSessionStats.record(category: "\(handType)-\(dealerStrength)", correct: isCorrect)
-        preserveSession()
     }
     
     func startNewSession() {
         currentSessionStats = SessionStats()
         sessionHistory.removeAll() // Clear temporary history
-        clearSessionPreservation()
-    }
-    
-    private func preserveSession() {
-        // Only preserve session during app suspension (not termination)
-        let sessionData = try? JSONEncoder().encode(currentSessionStats)
-        userDefaults.set(sessionData, forKey: sessionKey)
-        userDefaults.set(Date().timeIntervalSince1970, forKey: sessionTimeoutKey)
-    }
-    
-    private func restoreActiveSession() {
-        guard let lastSessionTime = userDefaults.object(forKey: sessionTimeoutKey) as? TimeInterval,
-              Date().timeIntervalSince1970 - lastSessionTime < sessionTimeout,
-              let sessionData = userDefaults.data(forKey: sessionKey),
-              let restoredStats = try? JSONDecoder().decode(SessionStats.self, from: sessionData) else {
-            // Session expired or no session to restore
-            clearSessionPreservation()
-            return
-        }
-        
-        currentSessionStats = restoredStats
-    }
-    
-    private func clearSessionPreservation() {
-        userDefaults.removeObject(forKey: sessionKey)
-        userDefaults.removeObject(forKey: sessionTimeoutKey)
     }
 }
 
@@ -1106,54 +1072,8 @@ struct AppConfiguration {
     }
 }
 
-// ADD: Privacy-compliant analytics
-class AnalyticsManager: ObservableObject {
-    private let userDefaults = UserDefaults.standard
-    private let consentKey = "analytics_consent"
-    
-    @Published var hasAnalyticsConsent: Bool = false
-    
-    init() {
-        hasAnalyticsConsent = userDefaults.bool(forKey: consentKey)
-    }
-    
-    func requestAnalyticsConsent() {
-        // Show consent dialog
-    }
-    
-    func setAnalyticsConsent(_ consent: Bool) {
-        hasAnalyticsConsent = consent
-        userDefaults.set(consent, forKey: consentKey)
-    }
-    
-    func trackEvent(_ event: AnalyticsEvent) {
-        guard hasAnalyticsConsent else { return }
-        
-        switch event {
-        case .sessionCompleted(let sessionType, let accuracy):
-            recordSessionCompletion(sessionType: sessionType, accuracy: accuracy)
-        case .userEngagement(let duration):
-            recordEngagement(duration: duration)
-        }
-    }
-    
-    private func recordSessionCompletion(sessionType: SessionType, accuracy: Double) {
-        // Privacy-compliant local analytics
-        AppLogger.shared.logUserAction("session_completed", metadata: [
-            "type": sessionType.rawValue,
-            "accuracy": accuracy
-        ])
-    }
-    
-    private func recordEngagement(duration: TimeInterval) {
-        AppLogger.shared.logUserAction("engagement", metadata: ["duration": duration])
-    }
-}
-
-enum AnalyticsEvent {
-    case sessionCompleted(SessionType, accuracy: Double)
-    case userEngagement(duration: TimeInterval)
-}
+// Simplified: No analytics tracking needed for session-based trainer
+// Focus remains on immediate practice feedback rather than data collection
 ```
 
 ### Enhanced Accessibility Features
@@ -1228,10 +1148,10 @@ enum AnalyticsEvent {
 **Minimum iOS Version**: iOS 16.0+  
 **Development Tools**: Xcode 15+, Swift 5.9+  
 **Architecture**: MVVM + Coordinator with SwiftUI, Combine, and async/await  
-**Persistence**: Session-only with UserDefaults for suspension preservation  
+**Persistence**: None - pure session-based statistics  
 **Testing**: XCTest, ViewInspector, Point-Free Testing Library  
 **Performance**: Instruments profiling, MetricKit integration  
-**Analytics**: Privacy-compliant local analytics with opt-in telemetry
+**Analytics**: None - session-focused trainer without tracking
 
 **Production Project Structure**:
 ```
@@ -1301,6 +1221,15 @@ BlackjackTrainer/
 3. **Performance first**: Add scenario caching and async patterns early
 4. **Accessibility by design**: Build with VoiceOver support from the beginning
 5. **Production mindset**: Include logging, error handling, and analytics from start
+
+## Technical Specifications
+
+**Bundle Identifier**: `net.kristopherjohnson.blackjacktrainer`  
+**Minimum iOS Version**: iOS 16.0+  
+**Development Tools**: Xcode 15+, Swift 5.9+  
+**Architecture**: MVVM with SwiftUI and Combine  
+**Persistence**: None - pure session-based statistics  
+**Testing**: XCTest for unit tests, SwiftUI Test for UI tests
 
 ## Summary
 

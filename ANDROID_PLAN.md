@@ -16,14 +16,26 @@ The Python implementation provides a mathematically sound foundation that we'll 
 - **Performance**: Object pooling, memory leak prevention, battery optimization
 - **User Experience**: Material Design 3, adaptive layouts, haptic feedback, accessibility-first design
 - **Platform Integration**: Widgets, shortcuts, Wear OS, notifications, voice commands
-- **Production Readiness**: Crash reporting, analytics, security hardening, Play Store optimization
+- **Production Readiness**: Crash reporting, security hardening, Play Store optimization
 
 ## Android App Architecture (MVVM + Jetpack Compose)
 
-### Enhanced Data Layer - Session-Only Implementation
+### Design Philosophy: Session-Only Statistics
+
+Following the original Python implementation's design philosophy, this Android app uses **session-only statistics** rather than persistent historical data:
+
+- **Temporary by design**: Statistics exist only for the current session, just like the terminal-based trainer
+- **Pure session-based**: Statistics reset when app terminates, just like the terminal trainer
+- **Clean slate approach**: Each new session starts fresh, encouraging focused practice
+- **Privacy first**: No long-term data collection or storage
+- **Simplicity**: Eliminates complex database management and data migration concerns
+
+This approach maintains the educational focus on current performance rather than historical tracking, consistent with the original trainer's philosophy.
+
+### Enhanced Data Layer - Pure Session Implementation
 
 ```kotlin
-// Enhanced strategy data models with in-memory optimization and session persistence
+// Pure session-based strategy data models with in-memory optimization
 data class StrategyChart(
     val hardTotals: Map<HandKey, Action>,
     val softTotals: Map<HandKey, Action>,
@@ -120,49 +132,7 @@ data class AttemptRecord(
     var totalAttempts: Int = 0
 )
 
-// Session persistence manager using SharedPreferences
-class SessionPersistenceManager @Inject constructor(
-    private val context: Context
-) {
-    private val preferences: SharedPreferences = context.getSharedPreferences(
-        "blackjack_trainer_session", 
-        Context.MODE_PRIVATE
-    )
-    private val gson = Gson()
-    
-    fun saveSession(statistics: SessionStatistics) {
-        preferences.edit()
-            .putString(KEY_SESSION_DATA, gson.toJson(statistics))
-            .putLong(KEY_LAST_SAVE, System.currentTimeMillis())
-            .apply()
-    }
-    
-    fun loadSession(): SessionStatistics? {
-        val sessionData = preferences.getString(KEY_SESSION_DATA, null) ?: return null
-        return try {
-            val statistics = gson.fromJson(sessionData, SessionStatistics::class.java)
-            if (statistics.isExpired()) {
-                clearSession()
-                null
-            } else {
-                statistics
-            }
-        } catch (e: Exception) {
-            Timber.w(e, "Failed to load session data")
-            clearSession()
-            null
-        }
-    }
-    
-    fun clearSession() {
-        preferences.edit().clear().apply()
-    }
-    
-    companion object {
-        private const val KEY_SESSION_DATA = "session_statistics"
-        private const val KEY_LAST_SAVE = "last_save_time"
-    }
-}
+// Pure session-based - no persistence needed
 
 // Enhanced game state models with comprehensive metadata
 data class GameScenario(
@@ -513,7 +483,6 @@ interface StatisticsRepository {
 
 @Singleton
 class StatisticsRepositoryImpl @Inject constructor(
-    private val sessionPersistenceManager: SessionPersistenceManager,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : StatisticsRepository {
     
@@ -547,28 +516,16 @@ class StatisticsRepositoryImpl @Inject constructor(
     override suspend fun resetSession() {
         currentSession = SessionStatistics()
         _sessionStats.value = SessionStats()
-        sessionPersistenceManager.clearSession()
+        // Session-only - no persistence to clear
     }
     
     override suspend fun saveSession() = withContext(ioDispatcher) {
-        sessionPersistenceManager.saveSession(currentSession)
+        // Session-only - no persistence needed
     }
     
     override suspend fun loadSession() = withContext(ioDispatcher) {
-        sessionPersistenceManager.loadSession()?.let { loadedSession ->
-            currentSession = loadedSession
-            _sessionStats.value = SessionStats(
-                totalAttempts = loadedSession.totalCount,
-                correctAttempts = loadedSession.correctCount,
-                accuracy = loadedSession.getAccuracy(),
-                categoryStats = loadedSession.attempts.mapValues { (_, record) ->
-                    CategoryStats(
-                        total = record.totalAttempts,
-                        correct = record.correctAttempts
-                    )
-                }
-            )
-        }
+        // Session-only - no loading needed
+        null
     }
 }
 ```
@@ -833,7 +790,7 @@ class ScenarioGenerator @Inject constructor(
 }
 ```
 
-### Application Lifecycle Management for Session Persistence
+### Simplified Application Lifecycle Management
 
 ```kotlin
 // Application class with lifecycle-aware session management
@@ -870,28 +827,13 @@ class BlackjackTrainerApplication : Application(), Application.ActivityLifecycle
     }
     
     private fun notifyAppBackgrounded() {
-        // Notify all active ViewModels to save session
-        // This would be implemented using a global event bus or observer pattern
-        GlobalScope.launch {
-            try {
-                statisticsRepository.saveSession()
-            } catch (e: Exception) {
-                // Log error but don't crash
-                Timber.w(e, "Failed to save session on app background")
-            }
-        }
+        // Session-only app - no persistence needed when backgrounded
+        // Statistics exist only in memory for current session
     }
     
     private fun notifyAppForegrounded() {
-        // Notify all active ViewModels to reload session if needed
-        GlobalScope.launch {
-            try {
-                statisticsRepository.loadSession()
-            } catch (e: Exception) {
-                // Log error but don't crash
-                Timber.w(e, "Failed to load session on app foreground")
-            }
-        }
+        // Session-only app - no loading needed when foregrounded
+        // Statistics continue from in-memory state
     }
     
     // Unused lifecycle callbacks
@@ -1952,13 +1894,8 @@ fun ActionButton(
 ### Session-Only Statistics with Lifecycle Management
 
 ```kotlin
-// IMPORTANT: This section contains legacy Room database code. 
-// The updated session-only approach uses SharedPreferences and in-memory statistics.
-// See the SessionStatistics, SessionPersistenceManager, and StatisticsRepository 
-// implementations in the Data Layer section above for the simplified approach.
-
-// Advanced statistics with comprehensive Room persistence and performance optimization
-@Entity(
+// Simplified approach: No database persistence needed
+// Pure session-based statistics maintained in memory only
     tableName = "statistic_records",
     indices = [
         Index(value = ["timestamp"]),
@@ -3971,21 +3908,22 @@ private fun highContrastDarkColorScheme() = darkColorScheme(
 
 ## Technical Specifications
 
+**Application ID**: `net.kristopherjohnson.blackjacktrainer`  
 **Minimum Android Version**: Android 7.0 (API 24)+  
 **Target Android Version**: Android 14 (API 34)  
 **Development Tools**: Android Studio Hedgehog+, Kotlin 1.9+  
 **Architecture**: MVVM + Repository with Jetpack Compose, Coroutines, and Flow  
-**Persistence**: Session-only with SharedPreferences for lifecycle management, Google Drive Backup (Phase 6)  
+**Persistence**: None - pure session-based statistics  
 **Testing**: JUnit, MockK, Turbine, Espresso, Robolectric  
 **Performance**: Android Profiler, LeakCanary, Performance monitoring  
-**Analytics**: Privacy-compliant local analytics with optional Firebase
+**Analytics**: None - session-focused trainer without tracking
 
 **Production Project Structure**:
 ```
 app/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/blackjacktrainer/
+│   │   ├── java/net/kristopherjohnson/blackjacktrainer/
 │   │   │   ├── data/
 │   │   │   │   ├── persistence/       # SharedPreferences and session management
 │   │   │   │   ├── repository/        # Repository implementations
