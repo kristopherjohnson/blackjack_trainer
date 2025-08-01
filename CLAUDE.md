@@ -4,9 +4,13 @@ Read the plan and specification from @blackjack_trainer_plan.md
 
 The trainer must use the strategy given in @blackjack_basic_strategy.md
 
+All code generation **MUST** respect the `.editorconfig` settings of trimming
+trailing whitespace and adding an empty line at the end of every source file.
+
 ## Translations
 
-These directories contain translations of the Python program into other programming languages:
+These directories contain translations of the Python program into other
+programming languages:
 
 - `cpp/`: C++
 - `rust/`: Rust
@@ -28,10 +32,13 @@ pre-commit checks", perform these steps to ensure the code is in good shape:
 4. Ensure that the instructions in `README.md` are still correct
 5. Ensure that `blackjack_trainer_plan.md` is up to date with the current state of the project
 
-Alternatively, you can run the comprehensive pre-commit script that handles all implementations:
+Alternatively, you can run the comprehensive pre-commit script that handles all
+implementations:
 
 ```bash
 ./precommit.sh
 ```
 
-This script runs formatters, linters, and tests for Python, Rust, C++, and Go implementations automatically.
+This script runs formatters, linters, and tests for Python, Rust, C++, and Go
+implementations automatically.
+

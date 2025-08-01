@@ -128,24 +128,25 @@ enum Action: String, CaseIterable {
 ### View Models - Dependency Injection & Async Patterns
 
 ```swift
-// IMPROVED: Protocol-based dependency injection
-protocol StrategyChartProviding {
-    func getCorrectAction(for scenario: GameScenario) async throws -> Action
-    func getExplanation(for scenario: GameScenario) async -> String
+// UPDATED: Modern Swift 6 with Observation framework
+protocol StrategyChartProviding: Sendable {
+    func getCorrectAction(for scenario: GameScenario) throws -> Action
+    func getExplanation(for scenario: GameScenario) -> String
 }
 
-protocol StatisticsManaging {
-    func recordAttempt(handType: HandType, dealerStrength: DealerStrength, isCorrect: Bool) async
-    func getOverallStats() async -> Statistics
+protocol StatisticsManaging: Sendable {
+    func recordAttempt(handType: HandType, dealerStrength: DealerStrength, isCorrect: Bool)
+    func getSessionStats() -> SessionStats
 }
 
 @MainActor
-class TrainingSessionViewModel: ObservableObject {
-    @Published var state: SessionState = .ready
-    @Published var currentScenario: GameScenario?
-    @Published var sessionStats: SessionStats = SessionStats()
-    @Published var feedback: FeedbackResult?
-    @Published var progress: Double = 0.0
+@Observable
+class TrainingSessionViewModel {
+    var state: SessionState = .ready
+    var currentScenario: GameScenario?
+    var sessionStats: SessionStats = SessionStats()
+    var feedback: FeedbackResult?
+    var progress: Double = 0.0
     
     enum SessionState {
         case ready, active, showingFeedback, completed, error(TrainingError)
@@ -179,16 +180,16 @@ class TrainingSessionViewModel: ObservableObject {
         self.sessionConfig = sessionConfig
     }
     
-    func submitAnswer(_ action: Action) async {
+    func submitAnswer(_ action: Action) {
         guard let scenario = currentScenario else { return }
         
         do {
-            let correctAction = try await strategyProvider.getCorrectAction(for: scenario)
+            let correctAction = try strategyProvider.getCorrectAction(for: scenario)
             let isCorrect = action == correctAction
             
-            await updateStatistics(scenario: scenario, userAction: action, isCorrect: isCorrect)
+            updateStatistics(scenario: scenario, userAction: action, isCorrect: isCorrect)
             
-            let explanation = await strategyProvider.getExplanation(for: scenario)
+            let explanation = strategyProvider.getExplanation(for: scenario)
             feedback = FeedbackResult(
                 isCorrect: isCorrect,
                 userAction: action,
@@ -203,9 +204,9 @@ class TrainingSessionViewModel: ObservableObject {
         }
     }
     
-    private func updateStatistics(scenario: GameScenario, userAction: Action, isCorrect: Bool) async {
+    private func updateStatistics(scenario: GameScenario, userAction: Action, isCorrect: Bool) {
         let dealerStrength = DealerStrength.from(card: scenario.dealerCard)
-        await statisticsManager.recordAttempt(
+        statisticsManager.recordAttempt(
             handType: scenario.handType,
             dealerStrength: dealerStrength,
             isCorrect: isCorrect
@@ -285,25 +286,25 @@ struct CategoryStats {
 ### SwiftUI View Structure - Production Ready
 
 ```swift
-// IMPROVED: Main app entry point with session lifecycle management
+// UPDATED: Modern app architecture with Observation framework
 @main
 struct BlackjackTrainerApp: App {
-    @StateObject private var statisticsManager = StatisticsManager()
-    @StateObject private var sessionLifecycle: SessionLifecycleManager
-    @StateObject private var appState = AppState()
+    @State private var statisticsManager = StatisticsManager()
+    @State private var sessionLifecycle: SessionLifecycleManager
+    @State private var appState = AppState()
     
     init() {
         let statsManager = StatisticsManager()
-        self._statisticsManager = StateObject(wrappedValue: statsManager)
-        self._sessionLifecycle = StateObject(wrappedValue: SessionLifecycleManager(statisticsManager: statsManager))
+        self._statisticsManager = State(wrappedValue: statsManager)
+        self._sessionLifecycle = State(wrappedValue: SessionLifecycleManager(statisticsManager: statsManager))
     }
     
     var body: some Scene {
         WindowGroup {
             TrainingCoordinator()
-                .environmentObject(statisticsManager)
-                .environmentObject(sessionLifecycle)
-                .environmentObject(appState)
+                .environment(statisticsManager)
+                .environment(sessionLifecycle)
+                .environment(appState)
                 .onAppear {
                     setupApp()
                 }
@@ -318,9 +319,9 @@ struct BlackjackTrainerApp: App {
     }
 }
 
-// IMPROVED: Proper navigation state management
+// UPDATED: Navigation with Observation framework
 struct TrainingCoordinator: View {
-    @StateObject private var navigationState = NavigationState()
+    @State private var navigationState = NavigationState()
     
     var body: some View {
         NavigationStack(path: $navigationState.path) {
@@ -329,7 +330,7 @@ struct TrainingCoordinator: View {
                     destinationView(for: destination)
                 }
         }
-        .environmentObject(navigationState)
+        .environment(navigationState)
     }
     
     @ViewBuilder
@@ -349,8 +350,10 @@ struct TrainingCoordinator: View {
     }
 }
 
-class NavigationState: ObservableObject {
-    @Published var path = NavigationPath()
+@MainActor
+@Observable
+class NavigationState {
+    var path = NavigationPath()
     
     func navigateToSession(_ config: SessionConfiguration) {
         path.append(NavigationDestination.trainingSession(config))
@@ -392,9 +395,9 @@ struct ContentView: View {
     }
 }
 
-// IMPROVED: Main menu with proper navigation
+// UPDATED: Main menu with modern navigation
 struct MainMenuView: View {
-    @EnvironmentObject private var navigationState: NavigationState
+    @Environment(NavigationState.self) private var navigationState
     
     var body: some View {
         List {
@@ -481,14 +484,14 @@ struct MenuItemView: View {
     }
 }
 
-// IMPROVED: Core training session view with iPad support
+// UPDATED: Training session with modern SwiftUI patterns
 struct TrainingSessionView: View {
-    @StateObject private var viewModel: TrainingSessionViewModel
+    @State private var viewModel: TrainingSessionViewModel
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.dismiss) var dismiss
     
     init(configuration: SessionConfiguration) {
-        self._viewModel = StateObject(wrappedValue: TrainingSessionViewModel(sessionConfig: configuration))
+        self._viewModel = State(wrappedValue: TrainingSessionViewModel(sessionConfig: configuration))
     }
     
     var body: some View {
@@ -523,7 +526,7 @@ struct TrainingSessionView: View {
             }
         }
         .task {
-            await viewModel.startSession()
+            viewModel.startSession()
         }
     }
     
@@ -540,9 +543,7 @@ struct TrainingSessionView: View {
     
     private var actionSection: some View {
         ActionButtonsView { action in
-            Task {
-                await viewModel.submitAnswer(action)
-            }
+            viewModel.submitAnswer(action)
         }
     }
     
@@ -615,9 +616,11 @@ struct HandTypeSelectionView: View {
 ### Session-Only Statistics System
 
 ```swift
-class StatisticsManager: ObservableObject {
-    @Published var currentSessionStats = SessionStats()
-    @Published var sessionHistory: [SessionResult] = [] // Temporary in-memory only
+@MainActor
+@Observable
+class StatisticsManager {
+    var currentSessionStats = SessionStats()
+    var sessionHistory: [SessionResult] = [] // Temporary in-memory only
     
     // Pure session-based - no restoration needed
     
@@ -656,7 +659,7 @@ struct SessionStats: Codable {
 }
 
 struct StatisticsView: View {
-    @EnvironmentObject var statsManager: StatisticsManager
+    @Environment(StatisticsManager.self) var statsManager
     
     var body: some View {
         NavigationView {
@@ -764,12 +767,9 @@ struct ActionButton: View {
     
     var body: some View {
         Button(action.displayName) {
-            // Haptic feedback
-            let impact = UIImpactFeedbackGenerator(style: .medium)
-            impact.impactOccurred()
-            
             onTap(action)
         }
+        .sensoryFeedback(.impact(flexibility: .solid), trigger: action)
         .buttonStyle(AccessibleActionButtonStyle())
         .accessibilityLabel(action.accessibilityLabel)
         .accessibilityHint(action.accessibilityHint)
@@ -832,33 +832,61 @@ struct ScenarioDisplayView: View {
     }
 }
 
-// ADD: Shortcuts and Siri integration
-import Intents
+// UPDATED: Modern App Intents for iOS 17+
+import AppIntents
 
-struct StartTrainingIntent: NSUserActivity {
-    static let activityType = "com.yourapp.blackjacktrainer.startTraining"
+struct StartTrainingIntent: AppIntent {
+    static var title: LocalizedStringResource = "Start Blackjack Training"
+    static var description = IntentDescription("Begin a blackjack strategy training session")
     
-    convenience init(sessionType: SessionType) {
-        self.init(activityType: Self.activityType)
-        self.title = "Practice \(sessionType.displayName)"
-        self.userInfo = ["sessionType": sessionType.rawValue]
-        self.isEligibleForSearch = true
-        self.isEligibleForPrediction = true
+    @Parameter(title: "Session Type")
+    var sessionType: SessionTypeEntity
+    
+    func perform() async throws -> some IntentResult {
+        // Launch the app with the specified session type
+        return .result()
     }
 }
 
-// ADD: Widget support for quick stats
-import WidgetKit
+struct SessionTypeEntity: AppEntity {
+    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Session Type")
+    static var defaultQuery = SessionTypeQuery()
+    
+    var id: String
+    var displayRepresentation: DisplayRepresentation
+    
+    init(sessionType: SessionType) {
+        self.id = sessionType.rawValue
+        self.displayRepresentation = DisplayRepresentation(title: LocalizedStringResource(stringLiteral: sessionType.displayName))
+    }
+}
 
-struct StatsWidget: Widget {
-    let kind: String = "StatsWidget"
+struct SessionTypeQuery: EntityQuery {
+    func entities(for identifiers: [String]) async throws -> [SessionTypeEntity] {
+        return identifiers.compactMap { id in
+            SessionType.allCases.first { $0.rawValue == id }.map(SessionTypeEntity.init)
+        }
+    }
+    
+    func suggestedEntities() async throws -> [SessionTypeEntity] {
+        return SessionType.allCases.map(SessionTypeEntity.init)
+    }
+}
+
+// UPDATED: Modern WidgetKit with App Intents
+import WidgetKit
+import SwiftUI
+
+struct BlackjackTrainerWidget: Widget {
+    let kind: String = "BlackjackTrainerWidget"
     
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: StatsProvider()) { entry in
             StatsWidgetView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Training Stats")
-        .description("View your blackjack training progress.")
+        .description("View your current blackjack training session stats.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -867,16 +895,54 @@ struct StatsWidgetView: View {
     let entry: StatsEntry
     
     var body: some View {
-        VStack {
-            Text("Accuracy")
-                .font(.caption)
+        VStack(spacing: 8) {
+            Text("Session Stats")
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+            
             Text("\(entry.accuracy, specifier: "%.1f")%")
                 .font(.title.bold())
-            Text("\(entry.totalQuestions) questions")
+                .foregroundStyle(.primary)
+                .contentTransition(.numericText())
+            
+            Text("\(entry.correctAnswers)/\(entry.totalQuestions) correct")
                 .font(.caption2)
+                .foregroundStyle(.secondary)
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .widgetURL(URL(string: "blackjacktrainer://quickstart"))
     }
+}
+
+struct StatsProvider: TimelineProvider {
+    func placeholder(in context: Context) -> StatsEntry {
+        StatsEntry(date: Date(), accuracy: 85.0, correctAnswers: 17, totalQuestions: 20)
+    }
+    
+    func getSnapshot(in context: Context, completion: @escaping (StatsEntry) -> ()) {
+        let entry = StatsEntry(date: Date(), accuracy: 85.0, correctAnswers: 17, totalQuestions: 20)
+        completion(entry)
+    }
+    
+    func getTimeline(in context: Context, completion: @escaping (Timeline<StatsEntry>) -> ()) {
+        // Read session stats from UserDefaults
+        let stats = UserDefaults.group?.object(forKey: "currentSessionStats") as? Data
+        // Parse and create entry
+        let entry = StatsEntry(date: Date(), accuracy: 0, correctAnswers: 0, totalQuestions: 0)
+        let timeline = Timeline(entries: [entry], policy: .never)
+        completion(timeline)
+    }
+}
+
+struct StatsEntry: TimelineEntry {
+    let date: Date
+    let accuracy: Double
+    let correctAnswers: Int
+    let totalQuestions: Int
+}
+
+extension UserDefaults {
+    static let group = UserDefaults(suiteName: "group.net.kristopherjohnson.blackjacktrainer")
 }
 
 // ADD: Focus modes and notifications
@@ -1077,62 +1143,65 @@ struct AppConfiguration {
 ```
 
 ### Enhanced Accessibility Features
-- **VoiceOver Support**: Complete screen reader compatibility with custom accessibility labels
-- **Voice Control**: Full voice navigation support with custom commands
-- **Dynamic Type**: Comprehensive font scaling across all UI elements
-- **High Contrast**: Automatic adaptation to accessibility display settings
-- **Reduced Motion**: Animation preferences respected throughout the app
-- **Switch Control**: External switch device compatibility
-- **Guided Access**: Support for focused learning sessions
+- **VoiceOver Support**: Complete screen reader compatibility with semantic accessibility markup
+- **Voice Control**: Full voice navigation with SwiftUI's built-in accessibility actions
+- **Dynamic Type**: Automatic font scaling using SwiftUI's .font(.body) system
+- **High Contrast**: Automatic adaptation using SwiftUI's environment values
+- **Reduced Motion**: Animation preferences using @Environment(\.accessibilityReduceMotion)
+- **Switch Control**: Native SwiftUI button and navigation compatibility
+- **AssistiveTouch**: Full compatibility with iOS assistive technologies
+- **Smart Invert**: Proper color handling for dark mode alternatives
 
 ## Implementation Roadmap
 
-### Phase 1: Production Architecture Foundation (3-4 weeks)
-**Target**: Robust app structure with session-only persistence
-- [ ] Create Xcode project with SwiftUI + MVVM + Coordinator pattern
-- [ ] Implement protocol-based `StrategyChart` with comprehensive error handling
-- [ ] Build type-safe data models with proper Codable conformance
-- [ ] Create dependency injection container and service registration
-- [ ] Implement session-only statistics with UserDefaults preservation
-- [ ] Add session lifecycle management for app suspension/restoration
-- [ ] Add comprehensive logging and error tracking
-- [ ] Set up unit testing framework with mocked dependencies
+### Phase 1: Modern Architecture Foundation (2-3 weeks)
+**Target**: Clean, testable app structure with Swift 6 patterns
+- [ ] Create Xcode project with SwiftUI + Observation framework
+- [ ] Implement `StrategyChart` as immutable struct with comprehensive error handling
+- [ ] Build type-safe data models with Sendable conformance
+- [ ] Set up dependency injection with modern Swift patterns
+- [ ] Implement session-only statistics with structured concurrency
+- [ ] Add app lifecycle management with scene phase handling
+- [ ] Set up Swift Testing framework with comprehensive coverage
+- [ ] Configure build settings for Swift 6 strict concurrency
 
-### Phase 2: Core Training Engine (3-4 weeks)
-**Target**: All 4 training modes with session management
-- [ ] Implement scenario caching with background precomputation
-- [ ] Build all training session types with proper state management
-- [ ] Add comprehensive feedback system with mnemonics
-- [ ] Implement real-time session statistics tracking
-- [ ] Add session timeout and restoration logic (1-hour expiry)
-- [ ] Create performance monitoring and optimization
+### Phase 2: Training Engine Implementation (2-3 weeks)
+**Target**: All 4 training modes with efficient state management
+- [ ] Implement scenario generation with structured concurrency
+- [ ] Build training session types using Observation framework
+- [ ] Add feedback system with localized mnemonics
+- [ ] Implement session statistics with real-time updates
+- [ ] Add automatic session preservation on app backgrounding
+- [ ] Optimize performance with lazy loading and caching
 
-### Phase 3: Professional UI/UX (2-3 weeks)
-**Target**: Production-ready interface with accessibility
-- [ ] Implement adaptive layouts for iPhone and iPad
-- [ ] Add comprehensive accessibility support (VoiceOver, Voice Control)
-- [ ] Create polished animations and haptic feedback
-- [ ] Implement proper navigation state management
-- [ ] Add Dark Mode and Dynamic Type support
-- [ ] Build comprehensive statistics views with charts
+### Phase 3: Modern UI/UX (2-3 weeks)
+**Target**: Polished interface following Human Interface Guidelines
+- [ ] Implement adaptive layouts with size classes and SwiftUI containers
+- [ ] Add comprehensive accessibility with SwiftUI's accessibility modifiers
+- [ ] Implement VoiceOver navigation and custom actions
+- [ ] Support AssistiveTouch and Switch Control navigation
+- [ ] Create smooth animations using SwiftUI's built-in transitions
+- [ ] Implement navigation with SwiftUI's NavigationStack
+- [ ] Ensure automatic Dark Mode and Dynamic Type support
+- [ ] Build statistics views with Swift Charts framework
 
-### Phase 4: iOS Platform Integration (2-3 weeks)
-**Target**: Full iOS ecosystem integration
-- [ ] Add Shortcuts and Siri integration
-- [ ] Implement Widget support for quick stats
-- [ ] Create Apple Watch companion app
-- [ ] Add Focus modes and smart notifications
-- [ ] Implement privacy-compliant analytics with user consent
-- [ ] Add App Store Connect integration and crash reporting
+### Phase 4: iOS Platform Features (2-3 weeks)
+**Target**: Native iOS ecosystem integration
+- [ ] Add App Shortcuts and Siri integration with App Intents
+- [ ] Implement WidgetKit widgets for session stats
+- [ ] Create watchOS companion app with WatchConnectivity
+- [ ] Add UserNotifications for practice reminders
+- [ ] Implement privacy-first design with no tracking
+- [ ] Add OSLog for debugging and crash analysis
 
-### Phase 5: Production Readiness (1-2 weeks)
-**Target**: App Store submission ready
-- [ ] Comprehensive testing (unit, integration, UI automation)
-- [ ] Performance profiling and optimization
-- [ ] Security audit and privacy compliance
-- [ ] App Store assets and metadata preparation
-- [ ] Beta testing with TestFlight
-- [ ] Final submission and App Store approval
+### Phase 5: App Store Preparation (1-2 weeks)
+**Target**: Production-ready submission
+- [ ] Complete test coverage with Swift Testing framework
+- [ ] Performance profiling with Instruments and optimization
+- [ ] Privacy compliance review and App Privacy Report
+- [ ] App Store Connect setup with screenshots and metadata
+- [ ] TestFlight beta testing with external testers
+- [ ] Final App Store submission and review process
 
 ### Phase 6: Advanced Features (Optional - Post Launch)
 **Target**: Premium functionality while maintaining session-only model
@@ -1145,51 +1214,92 @@ struct AppConfiguration {
 
 ## Technical Specifications
 
-**Minimum iOS Version**: iOS 16.0+  
-**Development Tools**: Xcode 15+, Swift 5.9+  
-**Architecture**: MVVM + Coordinator with SwiftUI, Combine, and async/await  
-**Persistence**: None - pure session-based statistics  
-**Testing**: XCTest, ViewInspector, Point-Free Testing Library  
-**Performance**: Instruments profiling, MetricKit integration  
-**Analytics**: None - session-focused trainer without tracking
+**Minimum iOS Version**: iOS 17.0+  
+**Development Tools**: Xcode 16+, Swift 6.0+  
+**Architecture**: SwiftUI + Observation Framework with structured concurrency  
+**Persistence**: UserDefaults for session preservation, no permanent storage  
+**Testing**: Swift Testing framework, UI Testing with Accessibility  
+**Performance**: Instruments profiling, os_signpost for debugging  
+**Privacy**: No analytics tracking, session-only data model
 
 **Production Project Structure**:
 ```
 BlackjackTrainer/
 ├── App/
-│   ├── BlackjackTrainerApp.swift    # App entry point
-│   ├── AppState.swift               # Global app state
-│   └── AppConfiguration.swift       # Environment configuration
+│   ├── BlackjackTrainerApp.swift        # App entry point with Scene management
+│   ├── AppConfiguration.swift           # Environment and feature flags
+│   └── AppIntent/                        # App Intents for Shortcuts
+│       ├── StartTrainingIntent.swift
+│       └── SessionTypeEntity.swift
 ├── Core/
-│   ├── Models/                      # Domain models and entities
-│   ├── Services/                    # Business logic services
-│   ├── SessionManagement/           # Session preservation and restoration
-│   └── Utilities/                   # Helper utilities
+│   ├── Models/                          # Sendable domain models
+│   │   ├── GameModels.swift
+│   │   ├── StrategyChart.swift
+│   │   └── SessionConfiguration.swift
+│   ├── Services/                        # Business logic with actors
+│   │   ├── StrategyService.swift
+│   │   ├── StatisticsManager.swift
+│   │   └── ScenarioGenerator.swift
+│   └── Utilities/                       # Type-safe helpers
+│       ├── Logger.swift
+│       └── Extensions/
 ├── Features/
-│   ├── Training/                    # Training session feature
+│   ├── Training/                        # Training session module
 │   │   ├── Views/
-│   │   ├── ViewModels/
+│   │   │   ├── TrainingSessionView.swift
+│   │   │   ├── ScenarioDisplayView.swift
+│   │   │   └── ActionButtonsView.swift
+│   │   ├── ViewModels/                  # Observable view models
+│   │   │   └── TrainingSessionViewModel.swift
 │   │   └── Models/
-│   ├── Statistics/                  # Statistics feature
-│   └── Settings/                    # Settings feature
+│   │       └── FeedbackResult.swift
+│   ├── Statistics/                      # Session stats feature
+│   │   ├── Views/
+│   │   │   ├── StatisticsView.swift
+│   │   │   └── SessionStatsRow.swift
+│   │   └── Models/
+│   │       └── SessionStats.swift
+│   └── Menu/                           # Main navigation
+│       ├── Views/
+│       │   ├── MainMenuView.swift
+│       │   ├── DealerGroupView.swift
+│       │   └── HandTypeView.swift
+│       └── Navigation/
+│           └── NavigationState.swift
 ├── Shared/
-│   ├── Views/                       # Reusable UI components
-│   ├── Extensions/                  # Swift extensions
-│   ├── Navigation/                  # Navigation coordination
-│   └── Accessibility/               # Accessibility helpers
+│   ├── Components/                     # Reusable SwiftUI views
+│   │   ├── CardView.swift
+│   │   └── MenuItemView.swift
+│   ├── Accessibility/                  # Accessibility helpers
+│   │   └── AccessibilityLabels.swift
+│   └── Design/                         # Design system
+│       ├── Colors.swift
+│       └── Typography.swift
 ├── Resources/
-│   ├── Assets.xcassets             # Images and colors
-│   ├── Localizable.strings         # Internationalization
-│   └── StrategyData.json           # Strategy chart data
+│   ├── Assets.xcassets                 # SF Symbols and colors
+│   ├── Localizable.xcstrings          # String catalog for localization
+│   └── StrategyData.json              # Strategy chart reference
 ├── Tests/
-│   ├── UnitTests/                  # Unit tests
-│   ├── IntegrationTests/           # Integration tests
-│   ├── UITests/                    # UI automation tests
-│   └── PerformanceTests/           # Performance benchmarks
-└── WatchApp/                       # Apple Watch companion
-    ├── Views/
-    ├── ViewModels/
-    └── Complications/
+│   ├── BlackjackTrainerTests/          # Swift Testing framework
+│   │   ├── StrategyTests.swift
+│   │   ├── SessionTests.swift
+│   │   └── ModelTests.swift
+│   ├── BlackjackTrainerUITests/        # UI automation with accessibility
+│   │   ├── TrainingFlowTests.swift
+│   │   └── AccessibilityTests.swift
+│   └── TestData/                       # Test fixtures and mocks
+│       └── MockStrategy.swift
+├── Widget/                             # WidgetKit extension
+│   ├── BlackjackTrainerWidget.swift
+│   ├── StatsWidgetView.swift
+│   └── StatsProvider.swift
+├── WatchApp/                           # watchOS companion
+│   ├── BlackjackTrainerWatchApp.swift
+│   ├── Views/
+│   │   └── WatchTrainingView.swift
+│   └── ViewModels/
+│       └── WatchViewModel.swift
+└── Info.plist                          # App configuration and permissions
 ```
 
 ## Project Status
@@ -1225,11 +1335,47 @@ BlackjackTrainer/
 ## Technical Specifications
 
 **Bundle Identifier**: `net.kristopherjohnson.blackjacktrainer`  
-**Minimum iOS Version**: iOS 16.0+  
-**Development Tools**: Xcode 15+, Swift 5.9+  
-**Architecture**: MVVM with SwiftUI and Combine  
-**Persistence**: None - pure session-based statistics  
-**Testing**: XCTest for unit tests, SwiftUI Test for UI tests
+**Minimum iOS Version**: iOS 17.0+  
+**Development Tools**: Xcode 16+, Swift 6.0+  
+**Architecture**: SwiftUI + Observation Framework with structured concurrency  
+**Persistence**: UserDefaults for session preservation, App Groups for widget sharing  
+**Testing**: Swift Testing framework with 90%+ code coverage target  
+**Privacy**: No data collection, session-only statistics model  
+**Localization**: String Catalogs for multi-language support  
+**Accessibility**: WCAG 2.1 AA compliance with full VoiceOver support
+
+### Modern iOS Development Practices
+
+**Swift 6 Adoption**:
+- Complete concurrency safety with Sendable protocols
+- Actor-based architecture for thread-safe data management
+- Structured concurrency replacing completion handlers
+- Compile-time data race safety enforcement
+
+ **SwiftUI Best Practices**:
+- Observation framework replacing ObservableObject
+- @Environment for dependency injection
+- NavigationStack for type-safe navigation
+- Automatic accessibility with semantic markup
+- Built-in dark mode and dynamic type support
+
+**Performance Optimization**:
+- Lazy loading for scenario generation
+- @StateObject and @ObservedObject usage minimization
+- Efficient view updates with targeted state changes
+- Memory management with weak references where needed
+
+**Security & Privacy**:
+- No network requests or data transmission
+- Local-only session statistics
+- App Group for secure widget data sharing
+- Privacy manifest declaration (if required by Apple)
+
+**App Store Guidelines Compliance**:
+- Human Interface Guidelines adherence
+- Accessibility requirements (Section 2.5.1)
+- Educational app content guidelines
+- Appropriate age rating and content descriptors
 
 ## Summary
 
@@ -1248,17 +1394,46 @@ This iOS SwiftUI implementation plan maintains the proven architecture of the Py
 - Accessibility support and Apple ecosystem integration
 - Session-only statistics with suspension preservation (matches original Python design)
 
-**Development Timeline**: 11-19 weeks for production-ready implementation
-- **Core Implementation**: 11-14 weeks (Phases 1-5)
-- **Advanced Features**: Additional 8+ weeks (Phase 6)
-- **Total to App Store**: 3-4 months for professional release
+**Development Timeline**: 9-14 weeks for production-ready implementation
+- **Core Implementation**: 9-14 weeks (Phases 1-5)
+- **Advanced Features**: Additional 4-6 weeks (Phase 6)
+- **Total to App Store**: 2-3 months for professional release
 
-**Expert Assessment**: The revised plan transforms the original concept from a basic port into a production-ready iOS application that follows Apple's best practices and modern Swift development patterns. The architecture now supports:
+**Expert Assessment**: This updated plan leverages the latest iOS development patterns and Swift 6 capabilities for a truly modern implementation:
 
-- **Enterprise-grade reliability** with comprehensive error handling
-- **Peak performance** through async/await patterns and intelligent caching
-- **Universal accessibility** meeting and exceeding WCAG guidelines
-- **Full iOS ecosystem integration** leveraging platform-specific capabilities
-- **App Store readiness** with proper analytics, privacy compliance, and submission preparation
+- **Modern Swift architecture** using Observation framework and structured concurrency
+- **Native performance** with SwiftUI's latest optimizations and efficient state management
+- **Accessibility-first design** using SwiftUI's built-in accessibility features
+- **Clean codebase** following Swift 6 strict concurrency and Sendable protocols
+- **Privacy-compliant design** with session-only data model and no user tracking
+- **Streamlined development** using modern tools like Swift Testing and Swift Charts
 
-This implementation will not only match the Python trainer's educational value but significantly exceed it through native iOS advantages, creating a premium learning experience that could compete successfully in the App Store.
+This implementation creates a professional iOS app that leverages Swift 6's safety features and SwiftUI's declarative patterns for maintainable, performant code. The streamlined architecture reduces complexity while delivering a premium user experience that exceeds App Store quality standards.
+
+### Key Architectural Advantages
+
+**Type Safety & Concurrency**:
+- Swift 6's strict concurrency prevents data races at compile time
+- Sendable protocols ensure thread-safe data sharing
+- Actor isolation protects shared mutable state
+- Structured concurrency eliminates callback complexity
+
+**SwiftUI Modern Patterns**:
+- Observation framework provides efficient view updates
+- @Environment enables clean dependency injection
+- NavigationStack offers type-safe navigation flows
+- Built-in accessibility reduces implementation overhead
+
+**Development Efficiency**:
+- Swift Testing framework improves test readability and performance
+- String Catalogs streamline localization workflows
+- SwiftUI previews accelerate UI development iteration
+- Reduced boilerplate compared to UIKit implementations
+
+**Production Readiness**:
+- Session-only model eliminates data migration concerns
+- Privacy-first design meets Apple's latest requirements
+- Comprehensive accessibility ensures inclusive user experience
+- Modern tooling support for CI/CD and automated testing
+
+The 25% timeline reduction compared to traditional MVVM architectures reflects the maturity of SwiftUI and the elimination of complex state management patterns that would be required with persistent data models.

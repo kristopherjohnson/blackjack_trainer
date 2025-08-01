@@ -185,7 +185,7 @@ The trainer implements standard blackjack basic strategy with these rules:
 This project includes implementations in multiple programming languages for learning and comparison purposes:
 
 - **Python** (`bjst/`) - Main implementation with complete feature set
-- **Rust** (`rust/`) - High-performance implementation  
+- **Rust** (`rust/`) - High-performance implementation
 - **C++** (`cpp/`) - Native implementation with CMake build system
 - **Go** (`go/`) - Concurrent implementation
 
@@ -209,7 +209,7 @@ Individual implementation checks can also be run:
 # Python only
 pylint bjst/ && python3 -m unittest discover tests/
 
-# Rust only  
+# Rust only
 cd rust && cargo fmt && cargo clippy && cargo test
 
 # C++ only
@@ -225,7 +225,7 @@ To run in development mode or make modifications:
 
 1. Clone or download the project
 2. All core functionality is in the main Python files
-3. Tests are in the `tests/` directory  
+3. Tests are in the `tests/` directory
 4. Run `./precommit.sh` before making changes to ensure code quality
 5. Each implementation has comprehensive test coverage including hand generation validation
 
