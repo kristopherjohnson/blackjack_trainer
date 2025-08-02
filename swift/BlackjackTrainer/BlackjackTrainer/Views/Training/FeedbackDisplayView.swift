@@ -4,47 +4,89 @@ import SwiftUI
 
 struct FeedbackDisplayView: View {
     let feedback: FeedbackResult
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
+    @State private var animateElements = false
     
     var body: some View {
-        VStack(spacing: 24) {
-            // Result indicator
+        VStack(spacing: 16) {
+            // Result indicator with staggered animation
             resultHeader
+                .opacity(animateElements ? 1.0 : 0.0)
+                .scaleEffect(animateElements ? 1.0 : 0.8)
+                .animation(
+                    reduceMotion ? .none : .spring(response: 0.6, dampingFraction: 0.7),
+                    value: animateElements
+                )
             
             // Scenario summary
             scenarioSummary
+                .opacity(animateElements ? 1.0 : 0.0)
+                .offset(y: animateElements ? 0 : 20)
+                .animation(
+                    reduceMotion ? .none : .easeOut(duration: 0.4).delay(0.1),
+                    value: animateElements
+                )
             
             // Action comparison
             actionComparison
+                .opacity(animateElements ? 1.0 : 0.0)
+                .offset(y: animateElements ? 0 : 20)
+                .animation(
+                    reduceMotion ? .none : .easeOut(duration: 0.4).delay(0.2),
+                    value: animateElements
+                )
             
             // Explanation
             explanationSection
+                .opacity(animateElements ? 1.0 : 0.0)
+                .offset(y: animateElements ? 0 : 20)
+                .animation(
+                    reduceMotion ? .none : .easeOut(duration: 0.4).delay(0.3),
+                    value: animateElements
+                )
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(backgroundColor)
                 .stroke(borderColor, lineWidth: 2)
+                .scaleEffect(animateElements ? 1.0 : 0.95)
+                .animation(
+                    reduceMotion ? .none : .spring(response: 0.5, dampingFraction: 0.8),
+                    value: animateElements
+                )
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityDescription)
+        .onAppear {
+            withAnimation {
+                animateElements = true
+            }
+        }
     }
     
     // MARK: - Result Header
     
     private var resultHeader: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             Image(systemName: feedback.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
-                .font(.system(size: 40))
+                .font(.system(size: 32))
                 .foregroundColor(feedback.isCorrect ? .green : .red)
+                .symbolEffect(.bounce, value: animateElements)
+                .shadow(
+                    color: feedback.isCorrect ? .green.opacity(0.3) : .red.opacity(0.3),
+                    radius: animateElements ? 6 : 0
+                )
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(feedback.isCorrect ? "Correct!" : "Incorrect")
-                    .font(.title2.bold())
+                    .font(.title3.bold())
                     .foregroundColor(.primary)
                 
                 if !feedback.isCorrect {
                     Text("Keep practicing!")
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundColor(.secondary)
                 }
             }
@@ -56,20 +98,21 @@ struct FeedbackDisplayView: View {
     // MARK: - Scenario Summary
     
     private var scenarioSummary: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             Text("Scenario")
-                .font(.headline)
+                .font(.subheadline.bold())
                 .foregroundColor(.secondary)
             
             HStack {
                 Text("\(feedback.scenario.handType.displayName) \(feedback.scenario.playerTotal)")
-                    .font(.body.bold())
+                    .font(.callout.bold())
                 
                 Text("vs")
+                    .font(.caption)
                     .foregroundColor(.secondary)
                 
                 Text("Dealer \(feedback.scenario.dealerCard.displayValue)")
-                    .font(.body.bold())
+                    .font(.callout.bold())
             }
         }
     }
@@ -77,39 +120,53 @@ struct FeedbackDisplayView: View {
     // MARK: - Action Comparison
     
     private var actionComparison: some View {
-        HStack(spacing: 30) {
-            VStack(spacing: 8) {
+        HStack(spacing: 20) {
+            VStack(spacing: 6) {
                 Text("Your Action")
-                    .font(.caption)
+                    .font(.caption2)
                     .foregroundColor(.secondary)
                 
                 Text(feedback.userAction.displayName)
-                    .font(.title3.bold())
+                    .font(.callout.bold())
                     .foregroundColor(feedback.isCorrect ? .green : .red)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
                     .background(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 6)
                             .fill(feedback.isCorrect ? .green.opacity(0.1) : .red.opacity(0.1))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(
+                                        feedback.isCorrect ? .green.opacity(0.4) : .red.opacity(0.4),
+                                        lineWidth: animateElements ? 1.5 : 0
+                                    )
+                            )
                     )
+                    .scaleEffect(animateElements ? 1.0 : 0.9)
             }
             
             if !feedback.isCorrect {
-                VStack(spacing: 8) {
+                VStack(spacing: 6) {
                     Text("Correct Action")
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundColor(.secondary)
                     
                     Text(feedback.correctAction.displayName)
-                        .font(.title3.bold())
+                        .font(.callout.bold())
                         .foregroundColor(.green)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
                         .background(
-                            RoundedRectangle(cornerRadius: 8)
+                            RoundedRectangle(cornerRadius: 6)
                                 .fill(.green.opacity(0.1))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .stroke(.green.opacity(0.4), lineWidth: animateElements ? 1.5 : 0)
+                                )
                         )
+                        .scaleEffect(animateElements ? 1.0 : 0.9)
                 }
+                .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
     }
@@ -117,16 +174,16 @@ struct FeedbackDisplayView: View {
     // MARK: - Explanation Section
     
     private var explanationSection: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             Text("Strategy Tip")
-                .font(.headline)
+                .font(.subheadline.bold())
                 .foregroundColor(.secondary)
             
             Text(feedback.explanation)
-                .font(.body)
+                .font(.callout)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.primary)
-                .padding(.horizontal)
+                .lineLimit(4)
         }
     }
     

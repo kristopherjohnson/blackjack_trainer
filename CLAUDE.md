@@ -42,3 +42,25 @@ implementations:
 This script runs formatters, linters, and tests for Python, Rust, C++, and Go
 implementations automatically.
 
+## SwiftUI Implementation
+
+The `swift/BlackjackTrainer/` directory contains a complete SwiftUI implementation of the Blackjack Strategy Trainer for iOS. This implementation includes several UI improvements made during development:
+
+### UI Improvements Applied
+- **Card suit icons**: Main menu uses outline card suit symbols (♣ ♦ ♥ ♠) for the four practice modes
+- **Removed statistics display**: Training sessions no longer show ongoing statistics at the bottom for cleaner focus
+- **Optimized animations**: Faster transition timing (~50-60% reduction) for more responsive feel
+- **Safe area handling**: Proper bottom padding (60pt) ensures Continue button stays above tab bar
+- **Automatic scrolling**: ScrollViewReader automatically positions Continue button when feedback appears
+- **Compact layouts**: Reduced spacing throughout for efficient screen space usage
+- **No 3D effects**: Removed disorienting 3D card flip animations, kept smooth fade/scale transitions
+- **Visual feedback**: Subtle color tints (green/red) for correct/incorrect answers with accessibility support
+
+### Key Features
+- Complete SwiftUI app with Observation framework (iOS 17+)
+- Swift 6 concurrency compliance with proper main actor isolation
+- Full accessibility support including reduced motion preferences
+- Cross-device layout optimization for iPhone and iPad
+- Session-only statistics (no persistent storage as per design)
+- Proper Xcode project structure for iOS deployment
+

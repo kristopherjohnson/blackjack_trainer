@@ -14,7 +14,7 @@ public struct MainMenuView: View {
                     MenuItemView(
                         title: "Quick Practice",
                         subtitle: "Mixed scenarios from all categories",
-                        icon: "shuffle"
+                        icon: "suit.club"
                     ) {
                         let config = SessionConfiguration(
                             sessionType: .random,
@@ -26,7 +26,7 @@ public struct MainMenuView: View {
                     MenuItemView(
                         title: "Dealer Strength Groups",
                         subtitle: "Practice by dealer weakness",
-                        icon: "person.3"
+                        icon: "suit.diamond"
                     ) {
                         navigationState.navigateToDealerGroups()
                     }
@@ -34,7 +34,7 @@ public struct MainMenuView: View {
                     MenuItemView(
                         title: "Hand Type Focus",
                         subtitle: "Hard totals, soft totals, or pairs",
-                        icon: "hand.raised"
+                        icon: "suit.heart"
                     ) {
                         navigationState.navigateToHandTypes()
                     }
@@ -42,7 +42,7 @@ public struct MainMenuView: View {
                     MenuItemView(
                         title: "Absolutes Drill",
                         subtitle: "Never/always rules",
-                        icon: "exclamationmark.triangle"
+                        icon: "suit.spade"
                     ) {
                         let config = SessionConfiguration(
                             sessionType: .absolute,

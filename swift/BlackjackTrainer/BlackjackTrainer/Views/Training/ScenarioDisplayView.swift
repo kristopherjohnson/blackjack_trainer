@@ -4,6 +4,7 @@ import SwiftUI
 
 struct ScenarioDisplayView: View {
     let scenario: GameScenario
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
     
     var body: some View {
         VStack(spacing: 30) {
@@ -15,6 +16,11 @@ struct ScenarioDisplayView: View {
                 
                 CardView(card: scenario.dealerCard)
                     .accessibilityLabel("Dealer card is \(scenario.dealerCard.displayValue)")
+                    .scaleEffect(1.0)
+                    .animation(
+                        reduceMotion ? .none : .spring(response: 0.4, dampingFraction: 0.8),
+                        value: scenario.dealerCard.id
+                    )
             }
             
             // Player cards section
@@ -24,14 +30,25 @@ struct ScenarioDisplayView: View {
                     .foregroundColor(.secondary)
                 
                 HStack(spacing: 8) {
-                    ForEach(scenario.playerCards, id: \.id) { card in
+                    ForEach(scenario.playerCards.indices, id: \.self) { index in
+                        let card = scenario.playerCards[index]
                         CardView(card: card)
+                            .scaleEffect(1.0)
+                            .animation(
+                                reduceMotion ? .none : .spring(response: 0.4, dampingFraction: 0.8)
+                                    .delay(Double(index) * 0.1),
+                                value: card.id
+                            )
                     }
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Your cards total \(scenario.playerTotal)")
                 
                 handDescriptionView
+                    .animation(
+                        reduceMotion ? .none : .easeInOut(duration: 0.3),
+                        value: scenario.id
+                    )
             }
         }
         .accessibilityElement(children: .combine)
@@ -43,15 +60,18 @@ struct ScenarioDisplayView: View {
             Text("\(scenario.handType.displayName) \(scenario.playerTotal)")
                 .font(.title2.bold())
                 .foregroundColor(.primary)
+                .transition(.scale.combined(with: .opacity))
             
             if scenario.handType == .pair {
                 Text("Pair of \(scenario.playerCards.first?.displayValue ?? "?")'s")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             } else if scenario.handType == .soft {
                 Text("Soft total (Ace as 11)")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
     }

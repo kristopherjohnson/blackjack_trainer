@@ -7,55 +7,55 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		OBJ_App /* App.swift */ = {isa = PBXBuildFile; fileRef = OBJ_AppRef; };
-		OBJ_GameModels /* GameModels.swift */ = {isa = PBXBuildFile; fileRef = OBJ_GameModelsRef; };
-		OBJ_Statistics /* Statistics.swift */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsRef; };
-		OBJ_StrategyChart /* StrategyChart.swift */ = {isa = PBXBuildFile; fileRef = OBJ_StrategyChartRef; };
-		OBJ_ScenarioGenerator /* ScenarioGenerator.swift */ = {isa = PBXBuildFile; fileRef = OBJ_ScenarioGeneratorRef; };
-		OBJ_StatisticsManager /* StatisticsManager.swift */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsManagerRef; };
-		OBJ_NavigationState /* NavigationState.swift */ = {isa = PBXBuildFile; fileRef = OBJ_NavigationStateRef; };
-		OBJ_TrainingSessionViewModel /* TrainingSessionViewModel.swift */ = {isa = PBXBuildFile; fileRef = OBJ_TrainingSessionViewModelRef; };
-		OBJ_ActionButton /* ActionButton.swift */ = {isa = PBXBuildFile; fileRef = OBJ_ActionButtonRef; };
-		OBJ_CardView /* CardView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_CardViewRef; };
-		OBJ_MenuItemView /* MenuItemView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_MenuItemViewRef; };
-		OBJ_StrategyGuideView /* StrategyGuideView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_StrategyGuideViewRef; };
-		OBJ_DealerGroupSelectionView /* DealerGroupSelectionView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_DealerGroupSelectionViewRef; };
-		OBJ_HandTypeSelectionView /* HandTypeSelectionView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_HandTypeSelectionViewRef; };
-		OBJ_MainMenuView /* MainMenuView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_MainMenuViewRef; };
-		OBJ_SessionStatsView /* SessionStatsView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_SessionStatsViewRef; };
-		OBJ_StatisticsView /* StatisticsView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsViewRef; };
-		OBJ_FeedbackDisplayView /* FeedbackDisplayView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_FeedbackDisplayViewRef; };
-		OBJ_ScenarioDisplayView /* ScenarioDisplayView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_ScenarioDisplayViewRef; };
-		OBJ_TrainingSessionView /* TrainingSessionView.swift */ = {isa = PBXBuildFile; fileRef = OBJ_TrainingSessionViewRef; };
+		OBJ_ActionButton /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_ActionButtonRef /* ActionButton.swift */; };
+		OBJ_App /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_AppRef /* App.swift */; };
+		OBJ_CardView /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_CardViewRef /* CardView.swift */; };
+		OBJ_DealerGroupSelectionView /* DealerGroupSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_DealerGroupSelectionViewRef /* DealerGroupSelectionView.swift */; };
+		OBJ_FeedbackDisplayView /* FeedbackDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_FeedbackDisplayViewRef /* FeedbackDisplayView.swift */; };
+		OBJ_GameModels /* GameModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_GameModelsRef /* GameModels.swift */; };
+		OBJ_HandTypeSelectionView /* HandTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_HandTypeSelectionViewRef /* HandTypeSelectionView.swift */; };
+		OBJ_MainMenuView /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_MainMenuViewRef /* MainMenuView.swift */; };
+		OBJ_MenuItemView /* MenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_MenuItemViewRef /* MenuItemView.swift */; };
+		OBJ_NavigationState /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_NavigationStateRef /* NavigationState.swift */; };
+		OBJ_ScenarioDisplayView /* ScenarioDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_ScenarioDisplayViewRef /* ScenarioDisplayView.swift */; };
+		OBJ_ScenarioGenerator /* ScenarioGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_ScenarioGeneratorRef /* ScenarioGenerator.swift */; };
+		OBJ_SessionStatsView /* SessionStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_SessionStatsViewRef /* SessionStatsView.swift */; };
+		OBJ_Statistics /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsRef /* Statistics.swift */; };
+		OBJ_StatisticsManager /* StatisticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsManagerRef /* StatisticsManager.swift */; };
+		OBJ_StatisticsView /* StatisticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_StatisticsViewRef /* StatisticsView.swift */; };
+		OBJ_StrategyChart /* StrategyChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_StrategyChartRef /* StrategyChart.swift */; };
+		OBJ_StrategyGuideView /* StrategyGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_StrategyGuideViewRef /* StrategyGuideView.swift */; };
+		OBJ_TrainingSessionView /* TrainingSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_TrainingSessionViewRef /* TrainingSessionView.swift */; };
+		OBJ_TrainingSessionViewModel /* TrainingSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_TrainingSessionViewModelRef /* TrainingSessionViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		OBJ_AppRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		OBJ_InfoPlist = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		OBJ_GameModelsRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
-		OBJ_StatisticsRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
-		OBJ_StrategyChartRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyChart.swift; sourceTree = "<group>"; };
-		OBJ_ScenarioGeneratorRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioGenerator.swift; sourceTree = "<group>"; };
-		OBJ_StatisticsManagerRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsManager.swift; sourceTree = "<group>"; };
-		OBJ_NavigationStateRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
-		OBJ_TrainingSessionViewModelRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionViewModel.swift; sourceTree = "<group>"; };
-		OBJ_ActionButtonRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		OBJ_CardViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		OBJ_MenuItemViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
-		OBJ_StrategyGuideViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyGuideView.swift; sourceTree = "<group>"; };
-		OBJ_DealerGroupSelectionViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealerGroupSelectionView.swift; sourceTree = "<group>"; };
-		OBJ_HandTypeSelectionViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTypeSelectionView.swift; sourceTree = "<group>"; };
-		OBJ_MainMenuViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
-		OBJ_SessionStatsViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStatsView.swift; sourceTree = "<group>"; };
-		OBJ_StatisticsViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
-		OBJ_FeedbackDisplayViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackDisplayView.swift; sourceTree = "<group>"; };
-		OBJ_ScenarioDisplayViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioDisplayView.swift; sourceTree = "<group>"; };
-		OBJ_TrainingSessionViewRef = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionView.swift; sourceTree = "<group>"; };
-		OBJ_Product = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlackjackTrainer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_ActionButtonRef /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		OBJ_AppRef /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		OBJ_CardViewRef /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		OBJ_DealerGroupSelectionViewRef /* DealerGroupSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealerGroupSelectionView.swift; sourceTree = "<group>"; };
+		OBJ_FeedbackDisplayViewRef /* FeedbackDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackDisplayView.swift; sourceTree = "<group>"; };
+		OBJ_GameModelsRef /* GameModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameModels.swift; sourceTree = "<group>"; };
+		OBJ_HandTypeSelectionViewRef /* HandTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandTypeSelectionView.swift; sourceTree = "<group>"; };
+		OBJ_InfoPlist /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		OBJ_MainMenuViewRef /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		OBJ_MenuItemViewRef /* MenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
+		OBJ_NavigationStateRef /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
+		OBJ_Product /* BlackjackTrainer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlackjackTrainer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_ScenarioDisplayViewRef /* ScenarioDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioDisplayView.swift; sourceTree = "<group>"; };
+		OBJ_ScenarioGeneratorRef /* ScenarioGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioGenerator.swift; sourceTree = "<group>"; };
+		OBJ_SessionStatsViewRef /* SessionStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStatsView.swift; sourceTree = "<group>"; };
+		OBJ_StatisticsManagerRef /* StatisticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsManager.swift; sourceTree = "<group>"; };
+		OBJ_StatisticsRef /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		OBJ_StatisticsViewRef /* StatisticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsView.swift; sourceTree = "<group>"; };
+		OBJ_StrategyChartRef /* StrategyChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyChart.swift; sourceTree = "<group>"; };
+		OBJ_StrategyGuideViewRef /* StrategyGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyGuideView.swift; sourceTree = "<group>"; };
+		OBJ_TrainingSessionViewModelRef /* TrainingSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionViewModel.swift; sourceTree = "<group>"; };
+		OBJ_TrainingSessionViewRef /* TrainingSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingSessionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		OBJ_ProductFrameworks = {
+		OBJ_ProductFrameworks /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
@@ -65,159 +65,151 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		OBJ_BlackjackTrainerGroup /* BlackjackTrainer */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_AppRef /* App.swift */,
+				OBJ_InfoPlist /* Info.plist */,
+				OBJ_ModelsGroup /* Models */,
+				OBJ_ServicesGroup /* Services */,
+				OBJ_ViewModelsGroup /* ViewModels */,
+				OBJ_ViewsGroup /* Views */,
+			);
+			path = BlackjackTrainer;
+			sourceTree = "<group>";
+		};
+		OBJ_ComponentsGroup /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_ActionButtonRef /* ActionButton.swift */,
+				OBJ_CardViewRef /* CardView.swift */,
+				OBJ_MenuItemViewRef /* MenuItemView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		OBJ_Group = {
 			isa = PBXGroup;
 			children = (
-				OBJ_BlackjackTrainerGroup,
-				OBJ_ProductsGroup,
+				OBJ_BlackjackTrainerGroup /* BlackjackTrainer */,
+				OBJ_ProductsGroup /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		OBJ_BlackjackTrainerGroup = {
+		OBJ_GuideGroup /* Guide */ = {
 			isa = PBXGroup;
-			name = BlackjackTrainer;
-			path = BlackjackTrainer;
-			sourceTree = "<group>";
 			children = (
-				OBJ_AppRef,
-				OBJ_InfoPlist,
-				OBJ_ModelsGroup,
-				OBJ_ServicesGroup,
-				OBJ_ViewModelsGroup,
-				OBJ_ViewsGroup,
+				OBJ_StrategyGuideViewRef /* StrategyGuideView.swift */,
 			);
-		};
-		OBJ_ModelsGroup = {
-			isa = PBXGroup;
-			name = Models;
-			path = Models;
-			sourceTree = "<group>";
-			children = (
-				OBJ_GameModelsRef,
-				OBJ_StatisticsRef,
-				OBJ_StrategyChartRef,
-			);
-		};
-		OBJ_ServicesGroup = {
-			isa = PBXGroup;
-			name = Services;
-			path = Services;
-			sourceTree = "<group>";
-			children = (
-				OBJ_ScenarioGeneratorRef,
-				OBJ_StatisticsManagerRef,
-			);
-		};
-		OBJ_ViewModelsGroup = {
-			isa = PBXGroup;
-			name = ViewModels;
-			path = ViewModels;
-			sourceTree = "<group>";
-			children = (
-				OBJ_NavigationStateRef,
-				OBJ_TrainingSessionViewModelRef,
-			);
-		};
-		OBJ_ViewsGroup = {
-			isa = PBXGroup;
-			name = Views;
-			path = Views;
-			sourceTree = "<group>";
-			children = (
-				OBJ_ComponentsGroup,
-				OBJ_GuideGroup,
-				OBJ_MenuGroup,
-				OBJ_StatisticsGroupViews,
-				OBJ_TrainingGroup,
-			);
-		};
-		OBJ_ComponentsGroup = {
-			isa = PBXGroup;
-			name = Components;
-			path = Components;
-			sourceTree = "<group>";
-			children = (
-				OBJ_ActionButtonRef,
-				OBJ_CardViewRef,
-				OBJ_MenuItemViewRef,
-			);
-		};
-		OBJ_GuideGroup = {
-			isa = PBXGroup;
-			name = Guide;
 			path = Guide;
 			sourceTree = "<group>";
-			children = (
-				OBJ_StrategyGuideViewRef,
-			);
 		};
-		OBJ_MenuGroup = {
+		OBJ_MenuGroup /* Menu */ = {
 			isa = PBXGroup;
-			name = Menu;
+			children = (
+				OBJ_DealerGroupSelectionViewRef /* DealerGroupSelectionView.swift */,
+				OBJ_HandTypeSelectionViewRef /* HandTypeSelectionView.swift */,
+				OBJ_MainMenuViewRef /* MainMenuView.swift */,
+			);
 			path = Menu;
 			sourceTree = "<group>";
-			children = (
-				OBJ_DealerGroupSelectionViewRef,
-				OBJ_HandTypeSelectionViewRef,
-				OBJ_MainMenuViewRef,
-			);
 		};
-		OBJ_StatisticsGroupViews = {
+		OBJ_ModelsGroup /* Models */ = {
 			isa = PBXGroup;
-			name = Statistics;
-			path = Statistics;
+			children = (
+				OBJ_GameModelsRef /* GameModels.swift */,
+				OBJ_StatisticsRef /* Statistics.swift */,
+				OBJ_StrategyChartRef /* StrategyChart.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
-			children = (
-				OBJ_SessionStatsViewRef,
-				OBJ_StatisticsViewRef,
-			);
 		};
-		OBJ_TrainingGroup = {
-			isa = PBXGroup;
-			name = Training;
-			path = Training;
-			sourceTree = "<group>";
-			children = (
-				OBJ_FeedbackDisplayViewRef,
-				OBJ_ScenarioDisplayViewRef,
-				OBJ_TrainingSessionViewRef,
-			);
-		};
-		OBJ_ProductsGroup = {
+		OBJ_ProductsGroup /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_Product,
+				OBJ_Product /* BlackjackTrainer.app */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		OBJ_ServicesGroup /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_ScenarioGeneratorRef /* ScenarioGenerator.swift */,
+				OBJ_StatisticsManagerRef /* StatisticsManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		OBJ_StatisticsGroupViews /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_SessionStatsViewRef /* SessionStatsView.swift */,
+				OBJ_StatisticsViewRef /* StatisticsView.swift */,
+			);
+			path = Statistics;
+			sourceTree = "<group>";
+		};
+		OBJ_TrainingGroup /* Training */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_FeedbackDisplayViewRef /* FeedbackDisplayView.swift */,
+				OBJ_ScenarioDisplayViewRef /* ScenarioDisplayView.swift */,
+				OBJ_TrainingSessionViewRef /* TrainingSessionView.swift */,
+			);
+			path = Training;
+			sourceTree = "<group>";
+		};
+		OBJ_ViewModelsGroup /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_NavigationStateRef /* NavigationState.swift */,
+				OBJ_TrainingSessionViewModelRef /* TrainingSessionViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		OBJ_ViewsGroup /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_ComponentsGroup /* Components */,
+				OBJ_GuideGroup /* Guide */,
+				OBJ_MenuGroup /* Menu */,
+				OBJ_StatisticsGroupViews /* Statistics */,
+				OBJ_TrainingGroup /* Training */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		OBJ_BlackjackTrainerTarget = {
+		OBJ_BlackjackTrainerTarget /* BlackjackTrainer */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_BlackjackTrainerConfigs;
+			buildConfigurationList = OBJ_BlackjackTrainerConfigs /* Build configuration list for PBXNativeTarget "BlackjackTrainer" */;
 			buildPhases = (
-				OBJ_SourcesBuildPhase,
-				OBJ_ProductFrameworks,
+				OBJ_SourcesBuildPhase /* Sources */,
+				OBJ_ProductFrameworks /* Frameworks */,
+			);
+			buildRules = (
 			);
 			dependencies = (
 			);
 			name = BlackjackTrainer;
 			productName = BlackjackTrainer;
-			productReference = OBJ_Product;
+			productReference = OBJ_Product /* BlackjackTrainer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		OBJ_Project = {
+		OBJ_Project /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1640;
 			};
-			buildConfigurationList = OBJ_RootConfigs;
+			buildConfigurationList = OBJ_RootConfigs /* Build configuration list for PBXProject "BlackjackTrainer" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -226,47 +218,47 @@
 				en,
 			);
 			mainGroup = OBJ_Group;
-			productRefGroup = OBJ_ProductsGroup;
+			productRefGroup = OBJ_ProductsGroup /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				OBJ_BlackjackTrainerTarget,
+				OBJ_BlackjackTrainerTarget /* BlackjackTrainer */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		OBJ_SourcesBuildPhase = {
+		OBJ_SourcesBuildPhase /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_App,
-				OBJ_GameModels,
-				OBJ_Statistics,
-				OBJ_StrategyChart,
-				OBJ_ScenarioGenerator,
-				OBJ_StatisticsManager,
-				OBJ_NavigationState,
-				OBJ_TrainingSessionViewModel,
-				OBJ_ActionButton,
-				OBJ_CardView,
-				OBJ_MenuItemView,
-				OBJ_StrategyGuideView,
-				OBJ_DealerGroupSelectionView,
-				OBJ_HandTypeSelectionView,
-				OBJ_MainMenuView,
-				OBJ_SessionStatsView,
-				OBJ_StatisticsView,
-				OBJ_FeedbackDisplayView,
-				OBJ_ScenarioDisplayView,
-				OBJ_TrainingSessionView,
+				OBJ_App /* App.swift in Sources */,
+				OBJ_GameModels /* GameModels.swift in Sources */,
+				OBJ_Statistics /* Statistics.swift in Sources */,
+				OBJ_StrategyChart /* StrategyChart.swift in Sources */,
+				OBJ_ScenarioGenerator /* ScenarioGenerator.swift in Sources */,
+				OBJ_StatisticsManager /* StatisticsManager.swift in Sources */,
+				OBJ_NavigationState /* NavigationState.swift in Sources */,
+				OBJ_TrainingSessionViewModel /* TrainingSessionViewModel.swift in Sources */,
+				OBJ_ActionButton /* ActionButton.swift in Sources */,
+				OBJ_CardView /* CardView.swift in Sources */,
+				OBJ_MenuItemView /* MenuItemView.swift in Sources */,
+				OBJ_StrategyGuideView /* StrategyGuideView.swift in Sources */,
+				OBJ_DealerGroupSelectionView /* DealerGroupSelectionView.swift in Sources */,
+				OBJ_HandTypeSelectionView /* HandTypeSelectionView.swift in Sources */,
+				OBJ_MainMenuView /* MainMenuView.swift in Sources */,
+				OBJ_SessionStatsView /* SessionStatsView.swift in Sources */,
+				OBJ_StatisticsView /* StatisticsView.swift in Sources */,
+				OBJ_FeedbackDisplayView /* FeedbackDisplayView.swift in Sources */,
+				OBJ_ScenarioDisplayView /* ScenarioDisplayView.swift in Sources */,
+				OBJ_TrainingSessionView /* TrainingSessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		OBJ_DebugConfig = {
+		OBJ_DebugConfig /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -280,21 +272,42 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
-		OBJ_ReleaseConfig = {
+		OBJ_DebugConfigApp /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = A75NSTK2G2;
+				INFOPLIST_FILE = BlackjackTrainer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blackjacktrainer.app;
+				PRODUCT_NAME = BlackjackTrainer;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		OBJ_ReleaseConfig /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -303,74 +316,61 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_OPTIMIZATION_LEVEL = s;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				OTHER_SWIFT_FLAGS = "-DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};
-		OBJ_DebugConfigApp = {
+		OBJ_ReleaseConfigApp /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = A75NSTK2G2;
 				INFOPLIST_FILE = BlackjackTrainer/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blackjacktrainer.app";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.blackjacktrainer.app;
 				PRODUCT_NAME = BlackjackTrainer;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-			};
-			name = Debug;
-		};
-		OBJ_ReleaseConfigApp = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = BlackjackTrainer/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blackjacktrainer.app";
-				PRODUCT_NAME = BlackjackTrainer;
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		OBJ_RootConfigs = {
+		OBJ_BlackjackTrainerConfigs /* Build configuration list for PBXNativeTarget "BlackjackTrainer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_DebugConfig,
-				OBJ_ReleaseConfig,
+				OBJ_DebugConfigApp /* Debug */,
+				OBJ_ReleaseConfigApp /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		OBJ_BlackjackTrainerConfigs = {
+		OBJ_RootConfigs /* Build configuration list for PBXProject "BlackjackTrainer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_DebugConfigApp,
-				OBJ_ReleaseConfigApp,
+				OBJ_DebugConfig /* Debug */,
+				OBJ_ReleaseConfig /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = OBJ_Project;
+	rootObject = OBJ_Project /* Project object */;
 }

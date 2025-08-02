@@ -6,68 +6,67 @@ struct SessionStatsView: View {
     let stats: SessionStats
     
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Session Progress")
-                .font(.headline)
-                .foregroundColor(.secondary)
-            
+        // Compact single-line progress display
+        HStack(spacing: 16) {
             if stats.totalCount > 0 {
-                VStack(spacing: 12) {
-                    // Overall accuracy
-                    HStack {
-                        Text("Accuracy")
-                            .font(.body)
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
-                        Text(String(format: "%.1f%%", stats.accuracy))
-                            .font(.body.bold())
-                            .foregroundColor(accuracyColor(stats.accuracy))
-                    }
+                // Accuracy percentage
+                HStack(spacing: 4) {
+                    Text(String(format: "%.0f%%", stats.accuracy))
+                        .font(.body.bold())
+                        .foregroundColor(accuracyColor(stats.accuracy))
                     
-                    // Questions answered
-                    HStack {
-                        Text("Questions")
-                            .font(.body)
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
-                        Text("\(stats.correctCount)/\(stats.totalCount)")
-                            .font(.body.bold())
-                            .foregroundColor(.primary)
-                    }
+                    Text("Accuracy")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Text("•")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                // Questions count
+                HStack(spacing: 4) {
+                    Text("\(stats.correctCount)/\(stats.totalCount)")
+                        .font(.body.bold())
+                        .foregroundColor(.primary)
                     
-                    // Session duration
-                    HStack {
-                        Text("Duration")
-                            .font(.body)
-                            .foregroundColor(.primary)
-                        
-                        Spacer()
-                        
+                    Text("Questions")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                if stats.sessionDuration > 0 {
+                    Text("•")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    // Duration
+                    HStack(spacing: 4) {
                         Text(formatDuration(stats.sessionDuration))
                             .font(.body.bold())
                             .foregroundColor(.secondary)
+                        
+                        Text("Time")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.secondary.opacity(0.1))
-                )
+                
+                Spacer()
             } else {
-                Text("No questions answered yet")
+                Text("Ready to start")
                     .font(.body)
                     .foregroundColor(.secondary)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.secondary.opacity(0.1))
-                    )
+                
+                Spacer()
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.secondary.opacity(0.05))
+        )
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityDescription)
     }
