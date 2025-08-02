@@ -185,6 +185,7 @@ The trainer implements standard blackjack basic strategy with these rules:
 This project includes implementations in multiple programming languages for learning and comparison purposes:
 
 - **Python** (`bjst/`) - Main implementation with complete feature set
+- **SwiftUI** (`swift/`) - Native iOS/macOS app with modern SwiftUI interface
 - **Rust** (`rust/`) - High-performance implementation
 - **C++** (`cpp/`) - Native implementation with CMake build system
 - **Go** (`go/`) - Concurrent implementation
