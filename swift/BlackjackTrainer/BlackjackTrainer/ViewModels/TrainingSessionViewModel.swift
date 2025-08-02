@@ -22,66 +22,19 @@ class TrainingSessionViewModel {
         case active
         case showingFeedback
         case completed
-        case error(TrainingError)
-        
-        static func == (lhs: SessionState, rhs: SessionState) -> Bool {
-            switch (lhs, rhs) {
-            case (.ready, .ready),
-                 (.active, .active),
-                 (.showingFeedback, .showingFeedback),
-                 (.completed, .completed):
-                return true
-            case (.error(let lhsError), .error(let rhsError)):
-                return lhsError.localizedDescription == rhsError.localizedDescription
-            default:
-                return false
-            }
-        }
-    }
-    
-    enum TrainingError: LocalizedError {
-        case scenarioGenerationFailed
-        case statisticsUpdateFailed
-        
-        var errorDescription: String? {
-            switch self {
-            case .scenarioGenerationFailed:
-                return "Unable to generate practice scenario. Please try again."
-            case .statisticsUpdateFailed:
-                return "Failed to save your progress. Your session will continue."
-            }
-        }
     }
     
     // MARK: - Dependencies
     
-    private let strategyProvider: StrategyChartProviding
-    private let statisticsManager: StatisticsManaging
-    private let scenarioGenerator: ScenarioGenerator
+    private let strategyChart = StrategyChart()
+    private let statisticsManager = StatisticsManager.shared
+    private let scenarioGenerator = ScenarioGenerator()
     let sessionConfig: SessionConfiguration
     
     // MARK: - Initialization
     
-    init(
-        strategyProvider: StrategyChartProviding = StrategyChart(),
-        statisticsManager: StatisticsManaging,
-        scenarioGenerator: ScenarioGenerator,
-        sessionConfig: SessionConfiguration
-    ) {
-        self.strategyProvider = strategyProvider
-        self.statisticsManager = statisticsManager
-        self.scenarioGenerator = scenarioGenerator
+    init(sessionConfig: SessionConfiguration) {
         self.sessionConfig = sessionConfig
-    }
-    
-    // Convenience initializer with default dependencies
-    convenience init(sessionConfig: SessionConfiguration) {
-        self.init(
-            strategyProvider: StrategyChart(),
-            statisticsManager: StatisticsManager.shared,
-            scenarioGenerator: ScenarioGenerator(),
-            sessionConfig: sessionConfig
-        )
     }
     
     // MARK: - Session Management
@@ -101,12 +54,7 @@ class TrainingSessionViewModel {
             return
         }
         
-        guard let scenario = scenarioGenerator.generateScenario(for: sessionConfig) else {
-            state = .error(.scenarioGenerationFailed)
-            return
-        }
-        
-        currentScenario = scenario
+        currentScenario = scenarioGenerator.generateScenario(for: sessionConfig)
         state = .active
         feedback = nil
     }
@@ -114,26 +62,21 @@ class TrainingSessionViewModel {
     func submitAnswer(_ action: Action) {
         guard let scenario = currentScenario else { return }
         
-        do {
-            let correctAction = try strategyProvider.getCorrectAction(for: scenario)
-            let isCorrect = action == correctAction
-            
-            updateStatistics(scenario: scenario, userAction: action, isCorrect: isCorrect)
-            
-            let explanation = strategyProvider.getExplanation(for: scenario)
-            feedback = FeedbackResult(
-                isCorrect: isCorrect,
-                userAction: action,
-                correctAction: correctAction,
-                explanation: explanation,
-                scenario: scenario
-            )
-            
-            state = .showingFeedback
-            
-        } catch {
-            state = .error(.scenarioGenerationFailed)
-        }
+        let correctAction = strategyChart.getCorrectAction(for: scenario)
+        let isCorrect = action == correctAction
+        
+        updateStatistics(scenario: scenario, userAction: action, isCorrect: isCorrect)
+        
+        let explanation = strategyChart.getExplanation(for: scenario)
+        feedback = FeedbackResult(
+            isCorrect: isCorrect,
+            userAction: action,
+            correctAction: correctAction,
+            explanation: explanation,
+            scenario: scenario
+        )
+        
+        state = .showingFeedback
     }
     
     func continueToNextQuestion() {
@@ -148,16 +91,12 @@ class TrainingSessionViewModel {
     }
     
     func completeSession() {
-        if let manager = statisticsManager as? StatisticsManager {
-            manager.completeSession(configuration: sessionConfig)
-        }
+        statisticsManager.completeSession(configuration: sessionConfig)
         state = .completed
     }
     
     func endSessionEarly() {
-        if let manager = statisticsManager as? StatisticsManager {
-            manager.completeSession(configuration: sessionConfig)
-        }
+        statisticsManager.completeSession(configuration: sessionConfig)
         state = .completed
     }
     

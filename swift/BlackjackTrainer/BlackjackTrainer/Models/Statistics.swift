@@ -57,14 +57,12 @@ struct SessionResult: Codable, Identifiable {
     let id = UUID()
     let sessionType: SessionType
     let subtype: SessionSubtype?
-    let difficulty: Difficulty
     let stats: SessionStats
     let completedAt: Date
     
-    init(sessionType: SessionType, subtype: SessionSubtype?, difficulty: Difficulty, stats: SessionStats) {
+    init(sessionType: SessionType, subtype: SessionSubtype?, stats: SessionStats) {
         self.sessionType = sessionType
         self.subtype = subtype
-        self.difficulty = difficulty
         self.stats = stats
         self.completedAt = Date()
     }

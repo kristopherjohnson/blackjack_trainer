@@ -1,35 +1,13 @@
 import Foundation
 
-// MARK: - Strategy Errors
 
-enum StrategyError: LocalizedError {
-    case invalidScenario(String)
-    case dataCorruption
-    
-    var errorDescription: String? {
-        switch self {
-        case .invalidScenario(let message):
-            return message
-        case .dataCorruption:
-            return "Strategy data is corrupted. Please reinstall the app."
-        }
-    }
-}
-
-// MARK: - Strategy Chart Protocol
-
-protocol StrategyChartProviding: Sendable {
-    func getCorrectAction(for scenario: GameScenario) throws -> Action
-    func getExplanation(for scenario: GameScenario) -> String
-    func isAbsoluteRule(for scenario: GameScenario) -> Bool
-}
 
 // MARK: - Strategy Chart Implementation
 
-struct StrategyChart: StrategyChartProviding, Codable {
-    private let hardTotals: [HandKey: Action]
-    private let softTotals: [HandKey: Action]
-    private let pairs: [HandKey: Action]
+struct StrategyChart: Codable {
+    private let hardTotals: [String: Action]
+    private let softTotals: [String: Action]
+    private let pairs: [String: Action]
     private let mnemonics: [String: String]
     
     init() {
@@ -41,66 +19,66 @@ struct StrategyChart: StrategyChartProviding, Codable {
     
     // MARK: - Strategy Chart Data Construction
     
-    private static func buildHardTotals() -> [HandKey: Action] {
-        var chart: [HandKey: Action] = [:]
+    private static func buildHardTotals() -> [String: Action] {
+        var chart: [String: Action] = [:]
         
         // Hard 5-8: Always hit
         for total in 5...8 {
             for dealer in 2...11 {
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = .hit
+                chart["\(total)-\(dealer)"] = .hit
             }
         }
         
         // Hard 9: Double vs 3-6, otherwise hit
         for dealer in 2...11 {
             let action: Action = (3...6).contains(dealer) ? .double : .hit
-            chart[HandKey(playerTotal: 9, dealerCard: dealer)] = action
+            chart["9-\(dealer)"] = action
         }
         
         // Hard 10: Double vs 2-9, otherwise hit
         for dealer in 2...11 {
             let action: Action = (2...9).contains(dealer) ? .double : .hit
-            chart[HandKey(playerTotal: 10, dealerCard: dealer)] = action
+            chart["10-\(dealer)"] = action
         }
         
         // Hard 11: Double vs 2-10, hit vs Ace
         for dealer in 2...11 {
             let action: Action = dealer <= 10 ? .double : .hit
-            chart[HandKey(playerTotal: 11, dealerCard: dealer)] = action
+            chart["11-\(dealer)"] = action
         }
         
         // Hard 12: Stand vs 4-6, otherwise hit
         for dealer in 2...11 {
             let action: Action = (4...6).contains(dealer) ? .stand : .hit
-            chart[HandKey(playerTotal: 12, dealerCard: dealer)] = action
+            chart["12-\(dealer)"] = action
         }
         
         // Hard 13-16: Stand vs 2-6, otherwise hit
         for total in 13...16 {
             for dealer in 2...11 {
                 let action: Action = (2...6).contains(dealer) ? .stand : .hit
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = action
+                chart["\(total)-\(dealer)"] = action
             }
         }
         
         // Hard 17+: Always stand
         for total in 17...21 {
             for dealer in 2...11 {
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = .stand
+                chart["\(total)-\(dealer)"] = .stand
             }
         }
         
         return chart
     }
     
-    private static func buildSoftTotals() -> [HandKey: Action] {
-        var chart: [HandKey: Action] = [:]
+    private static func buildSoftTotals() -> [String: Action] {
+        var chart: [String: Action] = [:]
         
         // Soft 13-14 (A,2-A,3): Double vs 5-6, otherwise hit
         for total in [13, 14] {
             for dealer in 2...11 {
                 let action: Action = (5...6).contains(dealer) ? .double : .hit
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = action
+                chart["\(total)-\(dealer)"] = action
             }
         }
         
@@ -108,14 +86,14 @@ struct StrategyChart: StrategyChartProviding, Codable {
         for total in [15, 16] {
             for dealer in 2...11 {
                 let action: Action = (4...6).contains(dealer) ? .double : .hit
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = action
+                chart["\(total)-\(dealer)"] = action
             }
         }
         
         // Soft 17 (A,6): Double vs 3-6, otherwise hit
         for dealer in 2...11 {
             let action: Action = (3...6).contains(dealer) ? .double : .hit
-            chart[HandKey(playerTotal: 17, dealerCard: dealer)] = action
+            chart["17-\(dealer)"] = action
         }
         
         // Soft 18 (A,7): Stand vs 2,7,8; Double vs 3-6; Hit vs 9,10,A
@@ -128,62 +106,62 @@ struct StrategyChart: StrategyChartProviding, Codable {
             } else {
                 action = .hit
             }
-            chart[HandKey(playerTotal: 18, dealerCard: dealer)] = action
+            chart["18-\(dealer)"] = action
         }
         
         // Soft 19-21: Always stand
         for total in 19...21 {
             for dealer in 2...11 {
-                chart[HandKey(playerTotal: total, dealerCard: dealer)] = .stand
+                chart["\(total)-\(dealer)"] = .stand
             }
         }
         
         return chart
     }
     
-    private static func buildPairs() -> [HandKey: Action] {
-        var chart: [HandKey: Action] = [:]
+    private static func buildPairs() -> [String: Action] {
+        var chart: [String: Action] = [:]
         
         // A,A: Always split
         for dealer in 2...11 {
-            chart[HandKey(playerTotal: 11, dealerCard: dealer)] = .split
+            chart["11-\(dealer)"] = .split
         }
         
         // 2,2 and 3,3: Split vs 2-7, otherwise hit
         for pairValue in [2, 3] {
             for dealer in 2...11 {
                 let action: Action = (2...7).contains(dealer) ? .split : .hit
-                chart[HandKey(playerTotal: pairValue, dealerCard: dealer)] = action
+                chart["\(pairValue)-\(dealer)"] = action
             }
         }
         
         // 4,4: Split vs 5-6, otherwise hit
         for dealer in 2...11 {
             let action: Action = (5...6).contains(dealer) ? .split : .hit
-            chart[HandKey(playerTotal: 4, dealerCard: dealer)] = action
+            chart["4-\(dealer)"] = action
         }
         
         // 5,5: Never split, treat as hard 10
         for dealer in 2...11 {
             let action: Action = (2...9).contains(dealer) ? .double : .hit
-            chart[HandKey(playerTotal: 5, dealerCard: dealer)] = action
+            chart["5-\(dealer)"] = action
         }
         
         // 6,6: Split vs 2-6, otherwise hit
         for dealer in 2...11 {
             let action: Action = (2...6).contains(dealer) ? .split : .hit
-            chart[HandKey(playerTotal: 6, dealerCard: dealer)] = action
+            chart["6-\(dealer)"] = action
         }
         
         // 7,7: Split vs 2-7, otherwise hit
         for dealer in 2...11 {
             let action: Action = (2...7).contains(dealer) ? .split : .hit
-            chart[HandKey(playerTotal: 7, dealerCard: dealer)] = action
+            chart["7-\(dealer)"] = action
         }
         
         // 8,8: Always split
         for dealer in 2...11 {
-            chart[HandKey(playerTotal: 8, dealerCard: dealer)] = .split
+            chart["8-\(dealer)"] = .split
         }
         
         // 9,9: Split vs 2-9 except 7, stand vs 7,10,A
@@ -194,12 +172,12 @@ struct StrategyChart: StrategyChartProviding, Codable {
             } else {
                 action = .split
             }
-            chart[HandKey(playerTotal: 9, dealerCard: dealer)] = action
+            chart["9-\(dealer)"] = action
         }
         
         // 10,10: Never split, always stand
         for dealer in 2...11 {
-            chart[HandKey(playerTotal: 10, dealerCard: dealer)] = .stand
+            chart["10-\(dealer)"] = .stand
         }
         
         return chart
@@ -219,25 +197,16 @@ struct StrategyChart: StrategyChartProviding, Codable {
     
     // MARK: - Strategy Chart Interface
     
-    func getCorrectAction(for scenario: GameScenario) throws -> Action {
-        let key = HandKey(playerTotal: scenario.playerTotal, dealerCard: scenario.dealerCard.value)
+    func getCorrectAction(for scenario: GameScenario) -> Action {
+        let key = "\(scenario.playerTotal)-\(scenario.dealerCard.value)"
         
         switch scenario.handType {
         case .hard:
-            guard let action = hardTotals[key] else {
-                throw StrategyError.invalidScenario("No strategy found for hard \(scenario.playerTotal) vs \(scenario.dealerCard.displayValue)")
-            }
-            return action
+            return hardTotals[key] ?? .hit
         case .soft:
-            guard let action = softTotals[key] else {
-                throw StrategyError.invalidScenario("No strategy found for soft \(scenario.playerTotal) vs \(scenario.dealerCard.displayValue)")
-            }
-            return action
+            return softTotals[key] ?? .hit
         case .pair:
-            guard let action = pairs[key] else {
-                throw StrategyError.invalidScenario("No strategy found for pair \(scenario.playerTotal) vs \(scenario.dealerCard.displayValue)")
-            }
-            return action
+            return pairs[key] ?? .hit
         }
     }
     

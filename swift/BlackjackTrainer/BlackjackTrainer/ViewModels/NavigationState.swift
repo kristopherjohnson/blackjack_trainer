@@ -51,17 +51,3 @@ public class NavigationState {
     }
 }
 
-// MARK: - App State
-
-@MainActor
-@Observable
-public class AppState {
-    public var selectedTab: Int = 0
-    var isFirstLaunch: Bool = true
-    
-    public init() {}
-    
-    public func completeFirstLaunch() {
-        isFirstLaunch = false
-    }
-}

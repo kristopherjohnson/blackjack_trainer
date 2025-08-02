@@ -20,8 +20,6 @@ struct TrainingSessionView: View {
                 feedbackView
             case .completed:
                 completionView
-            case .error(let error):
-                errorView(error)
             }
         }
         .navigationTitle(viewModel.sessionTitle)
@@ -137,31 +135,6 @@ struct TrainingSessionView: View {
         .padding()
     }
     
-    // MARK: - Error View
-    
-    @ViewBuilder
-    private func errorView(_ error: TrainingSessionViewModel.TrainingError) -> some View {
-        VStack(spacing: 30) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 80))
-                .foregroundColor(.orange)
-            
-            Text("Error")
-                .font(.largeTitle.bold())
-            
-            Text(error.localizedDescription)
-                .font(.body)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-            
-            Button("Back to Menu") {
-                dismiss()
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
-        .padding()
-    }
     
     // MARK: - Section Views
     

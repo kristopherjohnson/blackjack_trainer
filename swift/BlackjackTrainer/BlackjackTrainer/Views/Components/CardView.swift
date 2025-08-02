@@ -11,20 +11,12 @@ struct CardView: View {
             .fill(cardBackground)
             .frame(width: 60, height: 84)
             .overlay(
-                VStack(spacing: 4) {
-                    Text(card.displayValue)
-                        .font(.title2.bold())
-                        .foregroundColor(.primary)
-                    
-                    if card.isFaceCard {
-                        Image(systemName: card.faceCardIcon)
-                            .foregroundColor(.primary)
-                            .font(.caption)
-                    }
-                }
+                Text(card.displayValue)
+                    .font(.title2.bold())
+                    .foregroundColor(.primary)
             )
             .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-            .accessibilityLabel(card.accessibilityDescription)
+            .accessibilityLabel("Card \(card.displayValue)")
     }
     
     private var cardBackground: Color {
@@ -32,18 +24,6 @@ struct CardView: View {
     }
 }
 
-// MARK: - Card Extensions
-
-private extension Card {
-    var faceCardIcon: String {
-        switch displayValue {
-        case "J": return "person.crop.circle"
-        case "Q": return "crown"
-        case "K": return "crown.fill"
-        default: return "crown.fill"
-        }
-    }
-}
 
 // MARK: - Preview
 

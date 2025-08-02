@@ -17,18 +17,14 @@ struct ActionButton: View {
         Button(action.displayName) {
             onTap(action)
         }
-        .buttonStyle(AccessibleActionButtonStyle(isEnabled: isEnabled))
-        .accessibilityLabel(action.accessibilityLabel)
-        .accessibilityHint(action.accessibilityHint)
-        .accessibilityValue(isEnabled ? "Available" : "Disabled")
-        .accessibilityAddTraits(isEnabled ? [] : .isButton)
+        .buttonStyle(ActionButtonStyle(isEnabled: isEnabled))
         .disabled(!isEnabled)
     }
 }
 
 // MARK: - Action Button Style
 
-struct AccessibleActionButtonStyle: ButtonStyle {
+struct ActionButtonStyle: ButtonStyle {
     let isEnabled: Bool
     
     func makeBody(configuration: Configuration) -> some View {

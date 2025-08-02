@@ -8,54 +8,51 @@ struct HandTypeSelectionView: View {
     var body: some View {
         List {
             Section {
-                MenuItemView(
-                    title: "Hard Totals",
-                    subtitle: "No aces or ace counts as 1",
-                    icon: "number"
-                ) {
-                    let config = SessionConfiguration(
-                        sessionType: .handType,
-                        subtype: .hard,
-                        difficulty: .normal
-                    )
-                    navigationState.navigateToSession(config)
-                }
-                
-                MenuItemView(
-                    title: "Soft Totals",
-                    subtitle: "Hands with ace counting as 11",
-                    icon: "a.circle"
-                ) {
-                    let config = SessionConfiguration(
-                        sessionType: .handType,
-                        subtype: .soft,
-                        difficulty: .normal
-                    )
-                    navigationState.navigateToSession(config)
-                }
-                
-                MenuItemView(
-                    title: "Pairs",
-                    subtitle: "Identical cards - split decisions",
-                    icon: "rectangle.split.2x1"
-                ) {
-                    let config = SessionConfiguration(
-                        sessionType: .handType,
-                        subtype: .pair,
-                        difficulty: .normal
-                    )
-                    navigationState.navigateToSession(config)
+                ForEach([SessionSubtype.hard, .soft, .pair], id: \.self) { subtype in
+                    MenuItemView(
+                        title: subtypeTitle(subtype),
+                        subtitle: subtypeSubtitle(subtype),
+                        icon: subtypeIcon(subtype)
+                    ) {
+                        let config = SessionConfiguration(sessionType: .handType, subtype: subtype)
+                        navigationState.navigateToSession(config)
+                    }
                 }
             } header: {
                 Text("Practice by Hand Type")
-            } footer: {
-                Text("Focus on specific hand categories to master the unique strategic patterns for each type. Hard totals emphasize basic hitting and standing, soft totals focus on doubling opportunities, and pairs require split timing decisions.")
             }
         }
         .navigationTitle("Hand Types")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.large)
         #endif
+    }
+    
+    private func subtypeTitle(_ subtype: SessionSubtype) -> String {
+        switch subtype {
+        case .hard: return "Hard Totals"
+        case .soft: return "Soft Totals"
+        case .pair: return "Pairs"
+        default: return ""
+        }
+    }
+    
+    private func subtypeSubtitle(_ subtype: SessionSubtype) -> String {
+        switch subtype {
+        case .hard: return "No aces or ace counts as 1"
+        case .soft: return "Hands with ace counting as 11"
+        case .pair: return "Identical cards - split decisions"
+        default: return ""
+        }
+    }
+    
+    private func subtypeIcon(_ subtype: SessionSubtype) -> String {
+        switch subtype {
+        case .hard: return "number"
+        case .soft: return "a.circle"
+        case .pair: return "rectangle.split.2x1"
+        default: return "number"
+        }
     }
 }
 

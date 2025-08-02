@@ -6,35 +6,16 @@ import Foundation
 struct Card: Codable, Identifiable, Hashable {
     let id = UUID()
     let value: Int // 2-11 (11 for Ace)
-    let displayValue: String
     
-    init(value: Int) {
-        self.value = value
-        
+    var displayValue: String {
         switch value {
-        case 11:
-            self.displayValue = "A"
-        case 10:
-            // For simplicity, all 10-value cards are represented as "10"
-            self.displayValue = "10"
-        default:
-            self.displayValue = String(value)
+        case 11: return "A"
+        case 10: return "10"
+        default: return String(value)
         }
     }
     
     var isAce: Bool { value == 11 }
-    var isFaceCard: Bool { value == 10 && displayValue != "10" }
-    
-    var accessibilityDescription: String {
-        switch displayValue {
-        case "A":
-            return "Ace"
-        case "10":
-            return "Ten"
-        default:
-            return displayValue
-        }
-    }
 }
 
 /// Types of blackjack hands
@@ -65,37 +46,11 @@ enum Action: String, CaseIterable, Codable {
         case .split: return "Split"
         }
     }
-    
-    var accessibilityLabel: String {
-        switch self {
-        case .hit: return "Hit - Take another card"
-        case .stand: return "Stand - Keep current hand"
-        case .double: return "Double Down - Double bet and take one card"
-        case .split: return "Split Pair - Separate cards into two hands"
-        }
-    }
-    
-    var accessibilityHint: String {
-        switch self {
-        case .hit: return "Increases hand total"
-        case .stand: return "Ends your turn"
-        case .double: return "Doubles your bet"
-        case .split: return "Creates two separate hands"
-        }
-    }
 }
 
 /// Dealer card strength categories
 enum DealerStrength: String, CaseIterable, Codable {
     case weak, medium, strong
-    
-    var displayName: String {
-        switch self {
-        case .weak: return "Weak (4,5,6)"
-        case .medium: return "Medium (2,3,7,8)"
-        case .strong: return "Strong (9,10,A)"
-        }
-    }
     
     var cards: [Int] {
         switch self {
@@ -133,24 +88,7 @@ struct GameScenario: Identifiable, Codable {
     }
 }
 
-/// Key for strategy chart lookups
-struct HandKey: Hashable, Codable {
-    let playerTotal: Int
-    let dealerCard: Int
-}
 
-/// Difficulty levels
-enum Difficulty: String, CaseIterable, Codable {
-    case easy, normal, hard
-    
-    var displayName: String {
-        switch self {
-        case .easy: return "Easy"
-        case .normal: return "Normal"
-        case .hard: return "Hard"
-        }
-    }
-}
 
 /// Training session types
 enum SessionType: String, CaseIterable, Codable {
@@ -194,13 +132,11 @@ enum SessionSubtype: String, CaseIterable, Codable {
 struct SessionConfiguration: Hashable, Codable {
     let sessionType: SessionType
     let subtype: SessionSubtype?
-    let difficulty: Difficulty
     let maxQuestions: Int
     
-    init(sessionType: SessionType, subtype: SessionSubtype? = nil, difficulty: Difficulty = .normal) {
+    init(sessionType: SessionType, subtype: SessionSubtype? = nil) {
         self.sessionType = sessionType
         self.subtype = subtype
-        self.difficulty = difficulty
         self.maxQuestions = sessionType.maxQuestions
     }
 }

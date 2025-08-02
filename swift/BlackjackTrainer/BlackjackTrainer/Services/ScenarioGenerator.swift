@@ -4,11 +4,7 @@ import Foundation
 
 @MainActor
 class ScenarioGenerator: ObservableObject {
-    private let strategyChart: StrategyChart
-    
-    nonisolated init(strategyChart: StrategyChart = StrategyChart()) {
-        self.strategyChart = strategyChart
-    }
+    nonisolated init() {}
     
     // MARK: - Scenario Generation Methods
     
@@ -18,10 +14,14 @@ class ScenarioGenerator: ObservableObject {
             return generateRandomScenario()
         case .dealerGroup:
             guard let subtype = configuration.subtype else { return nil }
-            return generateDealerGroupScenario(strength: dealerStrengthFromSubtype(subtype))
+            let strength = dealerStrengthFromSubtype(subtype)
+            let dealerCard = Card(value: strength.cards.randomElement()!)
+            return generateScenarioForHandType(HandType.allCases.randomElement()!, dealerCard: dealerCard)
         case .handType:
             guard let subtype = configuration.subtype else { return nil }
-            return generateHandTypeScenario(handType: handTypeFromSubtype(subtype))
+            let handType = handTypeFromSubtype(subtype)
+            let dealerCard = Card(value: Int.random(in: 2...11))
+            return generateScenarioForHandType(handType, dealerCard: dealerCard)
         case .absolute:
             return generateAbsoluteScenario()
         }
@@ -30,50 +30,11 @@ class ScenarioGenerator: ObservableObject {
     private func generateRandomScenario() -> GameScenario {
         let dealerCard = Card(value: Int.random(in: 2...11))
         let handType = HandType.allCases.randomElement()!
-        
-        switch handType {
-        case .pair:
-            let pairValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].randomElement()!
-            let playerCards = [Card(value: pairValue), Card(value: pairValue)]
-            return GameScenario(handType: .pair, playerCards: playerCards, playerTotal: pairValue, dealerCard: dealerCard)
-            
-        case .soft:
-            let otherCard = Int.random(in: 2...9)
-            let playerCards = [Card(value: 11), Card(value: otherCard)]
-            return GameScenario(handType: .soft, playerCards: playerCards, playerTotal: 11 + otherCard, dealerCard: dealerCard)
-            
-        case .hard:
-            let playerTotal = Int.random(in: 5...20)
-            let playerCards = generateHardHandCards(total: playerTotal)
-            return GameScenario(handType: .hard, playerCards: playerCards, playerTotal: playerTotal, dealerCard: dealerCard)
-        }
+        return generateScenarioForHandType(handType, dealerCard: dealerCard)
     }
     
-    private func generateDealerGroupScenario(strength: DealerStrength) -> GameScenario {
-        let dealerCard = Card(value: strength.cards.randomElement()!)
-        let handType = HandType.allCases.randomElement()!
-        
-        switch handType {
-        case .pair:
-            let pairValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].randomElement()!
-            let playerCards = [Card(value: pairValue), Card(value: pairValue)]
-            return GameScenario(handType: .pair, playerCards: playerCards, playerTotal: pairValue, dealerCard: dealerCard)
-            
-        case .soft:
-            let otherCard = Int.random(in: 2...9)
-            let playerCards = [Card(value: 11), Card(value: otherCard)]
-            return GameScenario(handType: .soft, playerCards: playerCards, playerTotal: 11 + otherCard, dealerCard: dealerCard)
-            
-        case .hard:
-            let playerTotal = Int.random(in: 5...20)
-            let playerCards = generateHardHandCards(total: playerTotal)
-            return GameScenario(handType: .hard, playerCards: playerCards, playerTotal: playerTotal, dealerCard: dealerCard)
-        }
-    }
     
-    private func generateHandTypeScenario(handType: HandType) -> GameScenario {
-        let dealerCard = Card(value: Int.random(in: 2...11))
-        
+    private func generateScenarioForHandType(_ handType: HandType, dealerCard: Card) -> GameScenario {
         switch handType {
         case .pair:
             let pairValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11].randomElement()!

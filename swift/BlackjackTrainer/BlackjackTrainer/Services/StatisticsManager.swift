@@ -1,20 +1,12 @@
 import Foundation
 import Observation
 
-// MARK: - Statistics Managing Protocol
-
-@MainActor
-protocol StatisticsManaging: Sendable {
-    func recordAttempt(handType: HandType, dealerStrength: DealerStrength, isCorrect: Bool)
-    func getSessionStats() -> SessionStats
-    func startNewSession()
-}
 
 // MARK: - Statistics Manager
 
 @MainActor
 @Observable
-public class StatisticsManager: StatisticsManaging {
+public class StatisticsManager {
     var currentSessionStats = SessionStats()
     var sessionHistory: [SessionResult] = [] // Temporary in-memory only
     
@@ -42,7 +34,6 @@ public class StatisticsManager: StatisticsManaging {
             let sessionResult = SessionResult(
                 sessionType: .random, // Default type for session results
                 subtype: nil,
-                difficulty: .normal,
                 stats: currentSessionStats
             )
             sessionHistory.append(sessionResult)
@@ -62,7 +53,6 @@ public class StatisticsManager: StatisticsManaging {
             let sessionResult = SessionResult(
                 sessionType: configuration.sessionType,
                 subtype: configuration.subtype,
-                difficulty: configuration.difficulty,
                 stats: currentSessionStats
             )
             sessionHistory.append(sessionResult)

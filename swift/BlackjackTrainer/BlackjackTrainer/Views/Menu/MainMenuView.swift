@@ -18,8 +18,7 @@ public struct MainMenuView: View {
                     ) {
                         let config = SessionConfiguration(
                             sessionType: .random,
-                            subtype: nil,
-                            difficulty: .normal
+                            subtype: nil
                         )
                         navigationState.navigateToSession(config)
                     }
@@ -47,8 +46,7 @@ public struct MainMenuView: View {
                     ) {
                         let config = SessionConfiguration(
                             sessionType: .absolute,
-                            subtype: nil,
-                            difficulty: .easy
+                            subtype: nil
                         )
                         navigationState.navigateToSession(config)
                     }

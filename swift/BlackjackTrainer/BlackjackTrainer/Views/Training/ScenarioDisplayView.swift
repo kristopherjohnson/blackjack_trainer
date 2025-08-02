@@ -14,7 +14,7 @@ struct ScenarioDisplayView: View {
                     .foregroundColor(.secondary)
                 
                 CardView(card: scenario.dealerCard)
-                    .accessibilityLabel("Dealer card is \(scenario.dealerCard.accessibilityDescription)")
+                    .accessibilityLabel("Dealer card is \(scenario.dealerCard.displayValue)")
             }
             
             // Player cards section

@@ -25,7 +25,7 @@ public struct StrategyGuideView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
-                .background(Color(.systemBackground))
+                .background(Color.primary.opacity(0.05))
                 
                 // Strategy chart
                 ScrollView([.horizontal, .vertical]) {
@@ -34,10 +34,11 @@ public struct StrategyGuideView: View {
                         .padding(.vertical, 4)
                 }
             }
-            .navigationBarHidden(true)
-            .background(Color(.systemGroupedBackground))
+            #if os(iOS)
+            .toolbar(.hidden, for: .navigationBar)
+            #endif
+            .background(Color.secondary.opacity(0.05))
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     // MARK: - Strategy Chart
@@ -119,11 +120,7 @@ public struct StrategyGuideView: View {
         let strategyChart = StrategyChart()
         let scenario = createScenario(playerTotal: playerTotal, dealerCard: dealerCard)
         
-        do {
-            return try strategyChart.getCorrectAction(for: scenario)
-        } catch {
-            return .hit // Default fallback
-        }
+        return strategyChart.getCorrectAction(for: scenario)
     }
     
     private func createScenario(playerTotal: Int, dealerCard: Int) -> GameScenario {
