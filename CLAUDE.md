@@ -15,11 +15,25 @@ programming languages:
 - `cpp/`: C++
 - `rust/`: Rust
 - `go/`: Go
+- `android/`: Android (Kotlin/Java)
+- `swift/`: iOS (Swift)
 
 Each of these translations should have feature parity, have the same unit tests,
 and use the same high-level structure as the Python program. If a change is made
 to the Python implementation that affects behavior, make sure the same change is
 made to the other implementations.
+
+## Language-Specific Expert Agents
+
+All work in language-specific subdirectories should be handled by the appropriate expert agent:
+
+- **`android/`**: Use **android-expert** for all Android development, including Kotlin/Java code, Gradle build configuration, APK building, emulator management, and Android-specific debugging
+- **`swift/`**: Use **swift-expert** for all iOS development, including Swift code, Xcode project configuration, iOS deployment, and Apple platform-specific features
+- **`cpp/`**: Use **cpp-expert** for C++ code development, CMake configuration, and C++ best practices
+- **`rust/`**: Use **rust-expert** for Rust development, Cargo configuration, and async/tokio patterns
+- **`go/`**: Use **go-expert** for Go development, module management, and Go-specific patterns
+
+In general, always use the appropriate programming-language-specific expert agent for each language implementation to ensure proper expertise and best practices are applied.
 
 ## Development Workflow
 
