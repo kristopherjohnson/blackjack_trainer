@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Blackjack Trainer</string>
+    <string name="quick_practice">Quick Practice</string>
+    <string name="dealer_groups">Dealer Groups</string>
+    <string name="hand_types">Hand Types</string>
+    <string name="absolutes">Absolutes Drill</string>
+    <string name="hit">Hit</string>
+    <string name="stand">Stand</string>
+    <string name="double_down">Double</string>
+    <string name="split">Split</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect</string>
+    <string name="dealer_shows">Dealer shows: %s</string>
+    <string name="your_hand">Your hand: %s</string>
+    <string name="session_stats" formatted="false">Session: %d/%d (%.1f%%)</string>
+</resources>
