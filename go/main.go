@@ -112,31 +112,31 @@ func createSession(sessionType, difficulty string) trainer.TrainingSession {
 
 // showUsage displays the usage information.
 func showUsage() {
-	fmt.Println("Blackjack Basic Strategy Trainer")
-	fmt.Println()
-	fmt.Println("A terminal-based application to help memorize optimal blackjack strategy")
-	fmt.Println("through interactive practice sessions.")
-	fmt.Println()
-	fmt.Println("Usage:")
-	fmt.Println("  blackjack_trainer [flags]")
-	fmt.Println()
-	fmt.Println("Flags:")
-	fmt.Println("  -session string    Session type: random, dealer, hand, absolute")
-	fmt.Println("  -difficulty string Difficulty level: easy, normal, hard (default \"normal\")")
-	fmt.Println("  -help             Show this help message")
-	fmt.Println()
-	fmt.Println("Session Types:")
-	fmt.Println("  random     Mixed practice with all hand types and dealer cards")
-	fmt.Println("  dealer     Practice by dealer strength groups (weak/medium/strong)")
-	fmt.Println("  hand       Focus on specific hand types (hard/soft/pairs)")
-	fmt.Println("  absolute   Practice absolute rules (always/never scenarios)")
-	fmt.Println()
-	fmt.Println("Examples:")
-	fmt.Println("  blackjack_trainer                           # Interactive mode")
-	fmt.Println("  blackjack_trainer -session random           # Quick practice")
-	fmt.Println("  blackjack_trainer -session dealer           # Dealer groups")
-	fmt.Println("  blackjack_trainer -session hand -difficulty hard")
-	fmt.Println()
-	fmt.Println("If no session type is specified, the program will start in interactive mode")
-	fmt.Println("with a menu to choose the practice mode.")
+	fmt.Println(`Blackjack Basic Strategy Trainer
+
+A terminal-based application to help memorize optimal blackjack strategy
+through interactive practice sessions.
+
+Usage:
+  blackjack_trainer [flags]
+
+Flags:
+  -session string    Session type: random, dealer, hand, absolute
+  -difficulty string Difficulty level: easy, normal, hard (default "normal")
+  -help             Show this help message
+
+Session Types:
+  random     Mixed practice with all hand types and dealer cards
+  dealer     Practice by dealer strength groups (weak/medium/strong)
+  hand       Focus on specific hand types (hard/soft/pairs)
+  absolute   Practice absolute rules (always/never scenarios)
+
+Examples:
+  blackjack_trainer                           # Interactive mode
+  blackjack_trainer -session random           # Quick practice
+  blackjack_trainer -session dealer           # Dealer groups
+  blackjack_trainer -session hand -difficulty hard
+
+If no session type is specified, the program will start in interactive mode
+with a menu to choose the practice mode.`)
 }
