@@ -1,6 +1,6 @@
 # Blackjack Strategy Trainer
 
-A terminal-based Python program for macOS to help memorize blackjack basic strategy using progressive learning methods and reinforcement techniques.
+A multi-platform blackjack basic strategy trainer to help memorize optimal play using progressive learning methods and reinforcement techniques. Available as a terminal-based Python program and a modern web application.
 
 ## Features
 
@@ -14,17 +14,50 @@ A terminal-based Python program for macOS to help memorize blackjack basic strat
 - Session statistics tracking
 - Progressive difficulty system
 
-## Requirements
+## Available Versions
 
+### 🌐 Web Version (Recommended)
+A modern, responsive web application built with Vue 3 and TypeScript that runs in your browser:
+
+```bash
+cd web/
+npm install
+npm run dev
+```
+
+Then open `http://localhost:5173/` in your browser.
+
+**Web Version Features:**
+- Interactive playing card visuals
+- Touch-friendly interface for mobile devices
+- Real-time statistics with visual charts
+- No installation required - runs in any modern browser
+- Responsive design for desktop, tablet, and mobile
+- All training modes with immediate feedback
+
+### 💻 Terminal Version
+The original Python implementation for command-line enthusiasts:
+
+**Requirements:**
 - Python 3.8 or higher
 - macOS Terminal (or any compatible terminal)
 - No external dependencies required
 
-## Running the Program
+## Running the Programs
 
-The blackjack strategy trainer is packaged as a Python module and can be executed in multiple ways:
+### Web Version
 
-### Interactive Mode (Default)
+```bash
+cd web/
+npm install    # One-time setup
+npm run dev    # Start development server
+```
+
+Open `http://localhost:5173/` in your browser to start training.
+
+### Terminal Version
+
+#### Interactive Mode (Default)
 
 Start the interactive trainer with the main menu:
 
@@ -32,7 +65,7 @@ Start the interactive trainer with the main menu:
 python3 bjst
 ```
 
-### Command-line Mode
+#### Command-line Mode
 
 Run specific session types directly via command-line arguments:
 
@@ -57,7 +90,7 @@ python3 bjst -s absolute -d hard
 python3 bjst --help
 ```
 
-#### Available Options
+##### Available Options
 
 - `--session, -s`: Choose session type
   - `random`: Mixed practice with all scenarios
@@ -70,7 +103,7 @@ python3 bjst --help
   - `normal`: Standard difficulty (default)
   - `hard`: More challenging scenarios
 
-### Menu Options
+#### Menu Options
 
 1. **Quick Practice** - Random hands vs random dealer cards
 2. **Learn by Dealer Strength** - Practice against specific dealer card groups:
@@ -85,7 +118,7 @@ python3 bjst --help
 5. **View Statistics** - See your session performance
 6. **Quit** - Exit the program
 
-### How to Play
+#### How to Play
 
 1. Choose a practice mode from the main menu
 2. You'll be shown a dealer up-card and your hand
@@ -93,7 +126,7 @@ python3 bjst --help
 4. Get immediate feedback with the correct answer and explanation
 5. Continue practicing to improve your accuracy
 
-### Example Session
+#### Example Session
 
 ```
 Dealer shows: 7
@@ -138,21 +171,31 @@ All tests should pass, confirming that the strategy chart matches standard black
 
 ```
 blackjack_trainer/
-├── bjst/                      # Main package directory
-│   ├── __init__.py            # Package initialization and exports
-│   ├── __main__.py            # Entry point for `python3 bjst`
-│   ├── main.py                # Main application logic
-│   ├── strategy.py            # Strategy chart data and lookup
-│   ├── trainer.py             # Training session classes (inheritance-based)
-│   ├── ui.py                  # Terminal interface utilities
-│   └── stats.py               # Statistics tracking
-├── tests/                     # Unit tests
-│   └── test_strategy.py       # Strategy chart validation tests
-├── .pylintrc                  # Code quality configuration
-├── .gitignore                 # Git ignore patterns
-├── LICENSE                    # MIT license
-├── README.md                  # This file
-├── CLAUDE.md                  # Development workflow
+├── bjst/                           # Python terminal implementation
+│   ├── __init__.py                # Package initialization and exports
+│   ├── __main__.py                # Entry point for `python3 bjst`
+│   ├── main.py                    # Main application logic
+│   ├── strategy.py                # Strategy chart data and lookup
+│   ├── trainer.py                 # Training session classes
+│   ├── ui.py                      # Terminal interface utilities
+│   └── stats.py                   # Statistics tracking
+├── web/                           # Vue 3 web application
+│   ├── src/
+│   │   ├── components/            # Vue components
+│   │   ├── utils/                 # Core strategy logic (TypeScript)
+│   │   ├── types/                 # TypeScript definitions
+│   │   └── App.vue                # Main app component
+│   ├── package.json               # Dependencies and scripts
+│   └── README.md                  # Web-specific documentation
+├── swift/                         # iOS/macOS SwiftUI app
+├── android/                       # Android Kotlin app
+├── rust/                          # Rust implementation
+├── cpp/                           # C++ implementation
+├── go/                            # Go implementation
+├── tests/                         # Unit tests
+├── LICENSE                        # MIT license
+├── README.md                      # This file
+├── CLAUDE.md                      # Development workflow
 ├── blackjack_basic_strategy.md    # Official strategy reference
 └── blackjack_trainer_plan.md     # Implementation plan
 ```
@@ -184,11 +227,13 @@ The trainer implements standard blackjack basic strategy with these rules:
 
 This project includes implementations in multiple programming languages for learning and comparison purposes:
 
-- **Python** (`bjst/`) - Main implementation with complete feature set
-- **SwiftUI** (`swift/`) - Native iOS/macOS app with modern SwiftUI interface
+- **Python** (`bjst/`) - Original terminal-based implementation with complete feature set
+- **Vue 3 Web App** (`web/`) - Modern browser-based version with interactive UI
+- **SwiftUI** (`swift/`) - Native iOS/macOS app with modern SwiftUI interface  
 - **Rust** (`rust/`) - High-performance implementation
 - **C++** (`cpp/`) - Native implementation with CMake build system
 - **Go** (`go/`) - Concurrent implementation
+- **Android** (`android/`) - Native Android app
 
 ### Running Pre-commit Checks
 

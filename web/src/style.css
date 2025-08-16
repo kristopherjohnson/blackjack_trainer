@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-600 text-white hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200 p-6;
+  }
+  
+  .playing-card {
+    @apply w-24 h-32 border-2 border-gray-400 rounded-lg bg-white shadow-lg relative;
+  }
+  
+  .playing-card.red {
+    @apply text-red-600;
+  }
+  
+  .playing-card.black {
+    @apply text-gray-800;
+  }
+  
+  .card-corner {
+    @apply absolute top-1 left-1 flex flex-col items-center;
+  }
+  
+  .card-corner-bottom {
+    @apply absolute bottom-1 right-1;
+    transform: rotate(180deg);
+    line-height: 1;
+  }
+  
+  .card-value {
+    @apply text-lg font-bold leading-none;
+  }
+  
+  .card-value-bottom {
+    @apply text-lg font-bold leading-none;
+  }
+  
+  .card-mini-suit {
+    @apply text-sm leading-none;
+  }
+  
+  .card-mini-suit-bottom {
+    @apply text-sm leading-none;
+  }
+  
+  .card-center-suit {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl;
+  }
+}
