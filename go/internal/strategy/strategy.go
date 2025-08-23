@@ -54,12 +54,54 @@ func (ht HandType) String() string {
 	}
 }
 
+// MnemonicKey represents the different types of mnemonic explanations.
+type MnemonicKey int
+
+const (
+	// MnemonicAlwaysSplit represents the "always split" mnemonic for pairs.
+	MnemonicAlwaysSplit MnemonicKey = iota
+	// MnemonicNeverSplit represents the "never split" mnemonic for pairs.
+	MnemonicNeverSplit
+	// MnemonicDealerWeak represents explanations for dealer weak cards.
+	MnemonicDealerWeak
+	// MnemonicTeensVsStrong represents teens vs strong dealer explanations.
+	MnemonicTeensVsStrong
+	// MnemonicSoft17 represents the soft 17 (A,7) explanation.
+	MnemonicSoft17
+	// MnemonicHard12 represents the hard 12 exception explanation.
+	MnemonicHard12
+	// MnemonicDoubles represents general doubling explanations.
+	MnemonicDoubles
+)
+
+// String returns the string key for a MnemonicKey.
+func (mk MnemonicKey) String() string {
+	switch mk {
+	case MnemonicAlwaysSplit:
+		return "always_split"
+	case MnemonicNeverSplit:
+		return "never_split"
+	case MnemonicDealerWeak:
+		return "dealer_weak"
+	case MnemonicTeensVsStrong:
+		return "teens_vs_strong"
+	case MnemonicSoft17:
+		return "soft_17"
+	case MnemonicHard12:
+		return "hard_12"
+	case MnemonicDoubles:
+		return "doubles"
+	default:
+		return "unknown"
+	}
+}
+
 // StrategyChart represents the complete blackjack basic strategy chart.
 type StrategyChart struct {
 	hardTotals   map[HandKey]rune
 	softTotals   map[HandKey]rune
 	pairs        map[HandKey]rune
-	mnemonics    map[string]string
+	mnemonics    map[MnemonicKey]string
 	dealerGroups map[string][]int
 }
 
@@ -75,7 +117,7 @@ func New() *StrategyChart {
 		hardTotals:   make(map[HandKey]rune),
 		softTotals:   make(map[HandKey]rune),
 		pairs:        make(map[HandKey]rune),
-		mnemonics:    make(map[string]string),
+		mnemonics:    make(map[MnemonicKey]string),
 		dealerGroups: make(map[string][]int),
 	}
 
@@ -116,21 +158,21 @@ func (c *StrategyChart) GetExplanation(handType HandType, playerTotal, dealerCar
 	case HandTypePair:
 		switch playerTotal {
 		case 11: // A,A
-			return c.mnemonics["always_split"]
+			return c.mnemonics[MnemonicAlwaysSplit]
 		case 8: // 8,8
-			return c.mnemonics["always_split"]
+			return c.mnemonics[MnemonicAlwaysSplit]
 		case 10: // 10,10
-			return c.mnemonics["never_split"]
+			return c.mnemonics[MnemonicNeverSplit]
 		case 5: // 5,5
-			return c.mnemonics["never_split"]
+			return c.mnemonics[MnemonicNeverSplit]
 		}
 	case HandTypeSoft:
 		if playerTotal == 18 { // A,7
-			return c.mnemonics["soft_17"]
+			return c.mnemonics[MnemonicSoft17]
 		}
 	case HandTypeHard:
 		if playerTotal == 12 {
-			return c.mnemonics["hard_12"]
+			return c.mnemonics[MnemonicHard12]
 		}
 	}
 
@@ -138,7 +180,7 @@ func (c *StrategyChart) GetExplanation(handType HandType, playerTotal, dealerCar
 	if weakCards, exists := c.dealerGroups["weak"]; exists {
 		for _, card := range weakCards {
 			if card == dealerCard {
-				return c.mnemonics["dealer_weak"]
+				return c.mnemonics[MnemonicDealerWeak]
 			}
 		}
 	}
@@ -147,7 +189,7 @@ func (c *StrategyChart) GetExplanation(handType HandType, playerTotal, dealerCar
 		if playerTotal >= 13 && playerTotal <= 16 {
 			for _, card := range strongCards {
 				if card == dealerCard {
-					return c.mnemonics["teens_vs_strong"]
+					return c.mnemonics[MnemonicTeensVsStrong]
 				}
 			}
 		}
@@ -368,13 +410,13 @@ func (c *StrategyChart) buildPairs() {
 }
 
 func (c *StrategyChart) buildMnemonics() {
-	c.mnemonics["dealer_weak"] = "Dealer bust cards (4,5,6) = player gets greedy"
-	c.mnemonics["always_split"] = "Aces and eights, don't hesitate"
-	c.mnemonics["never_split"] = "Tens and fives, keep them alive"
-	c.mnemonics["teens_vs_strong"] = "Teens stay vs weak, flee from strong"
-	c.mnemonics["soft_17"] = "A,7 is the tricky soft hand"
-	c.mnemonics["hard_12"] = "12 is the exception - only stand vs 4,5,6"
-	c.mnemonics["doubles"] = "Double when dealer is weak and you can improve"
+	c.mnemonics[MnemonicDealerWeak] = "Dealer bust cards (4,5,6) = player gets greedy"
+	c.mnemonics[MnemonicAlwaysSplit] = "Aces and eights, don't hesitate"
+	c.mnemonics[MnemonicNeverSplit] = "Tens and fives, keep them alive"
+	c.mnemonics[MnemonicTeensVsStrong] = "Teens stay vs weak, flee from strong"
+	c.mnemonics[MnemonicSoft17] = "A,7 is the tricky soft hand"
+	c.mnemonics[MnemonicHard12] = "12 is the exception - only stand vs 4,5,6"
+	c.mnemonics[MnemonicDoubles] = "Double when dealer is weak and you can improve"
 }
 
 func (c *StrategyChart) buildDealerGroups() {
