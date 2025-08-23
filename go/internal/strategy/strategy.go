@@ -28,6 +28,32 @@ import (
 	"fmt"
 )
 
+// HandType represents the different types of blackjack hands.
+type HandType int
+
+const (
+	// HandTypeHard represents hard totals (no ace or ace counting as 1).
+	HandTypeHard HandType = iota
+	// HandTypeSoft represents soft totals (ace counting as 11).
+	HandTypeSoft
+	// HandTypePair represents pairs (two identical cards).
+	HandTypePair
+)
+
+// String returns the string representation of a HandType.
+func (ht HandType) String() string {
+	switch ht {
+	case HandTypeHard:
+		return "hard"
+	case HandTypeSoft:
+		return "soft"
+	case HandTypePair:
+		return "pair"
+	default:
+		return "unknown"
+	}
+}
+
 // StrategyChart represents the complete blackjack basic strategy chart.
 type StrategyChart struct {
 	hardTotals   map[HandKey]rune
@@ -63,19 +89,19 @@ func New() *StrategyChart {
 }
 
 // GetCorrectAction returns the correct action for a given scenario.
-func (c *StrategyChart) GetCorrectAction(handType string, playerTotal, dealerCard int) rune {
+func (c *StrategyChart) GetCorrectAction(handType HandType, playerTotal, dealerCard int) rune {
 	key := HandKey{PlayerTotal: playerTotal, DealerCard: dealerCard}
 
 	switch handType {
-	case "pair":
+	case HandTypePair:
 		if action, exists := c.pairs[key]; exists {
 			return action
 		}
-	case "soft":
+	case HandTypeSoft:
 		if action, exists := c.softTotals[key]; exists {
 			return action
 		}
-	case "hard":
+	case HandTypeHard:
 		if action, exists := c.hardTotals[key]; exists {
 			return action
 		}
@@ -84,10 +110,10 @@ func (c *StrategyChart) GetCorrectAction(handType string, playerTotal, dealerCar
 }
 
 // GetExplanation returns an explanation/mnemonic for a given scenario.
-func (c *StrategyChart) GetExplanation(handType string, playerTotal, dealerCard int) string {
+func (c *StrategyChart) GetExplanation(handType HandType, playerTotal, dealerCard int) string {
 	// Specific explanations for key scenarios
 	switch handType {
-	case "pair":
+	case HandTypePair:
 		switch playerTotal {
 		case 11: // A,A
 			return c.mnemonics["always_split"]
@@ -98,11 +124,11 @@ func (c *StrategyChart) GetExplanation(handType string, playerTotal, dealerCard 
 		case 5: // 5,5
 			return c.mnemonics["never_split"]
 		}
-	case "soft":
+	case HandTypeSoft:
 		if playerTotal == 18 { // A,7
 			return c.mnemonics["soft_17"]
 		}
-	case "hard":
+	case HandTypeHard:
 		if playerTotal == 12 {
 			return c.mnemonics["hard_12"]
 		}
@@ -131,15 +157,15 @@ func (c *StrategyChart) GetExplanation(handType string, playerTotal, dealerCard 
 }
 
 // IsAbsoluteRule checks if a scenario represents an absolute rule (always/never).
-func (c *StrategyChart) IsAbsoluteRule(handType string, playerTotal, dealerCard int) bool {
+func (c *StrategyChart) IsAbsoluteRule(handType HandType, playerTotal, dealerCard int) bool {
 	switch handType {
-	case "pair":
+	case HandTypePair:
 		// Pair absolutes: A,A (11), 8,8, 10,10, 5,5
 		return playerTotal == 11 || playerTotal == 8 || playerTotal == 10 || playerTotal == 5
-	case "hard":
+	case HandTypeHard:
 		// Hard 17+ always stand
 		return playerTotal >= 17
-	case "soft":
+	case HandTypeSoft:
 		// Soft 19+ always stand
 		return playerTotal >= 19
 	}

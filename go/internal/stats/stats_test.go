@@ -1,6 +1,8 @@
 package stats
 
 import (
+	"blackjack_trainer/internal/strategy"
+	"reflect"
 	"testing"
 )
 
@@ -34,7 +36,7 @@ func TestInitialState(t *testing.T) {
 func TestRecordCorrectAttempt(t *testing.T) {
 	stats := New()
 
-	stats.RecordAttempt("hard", "weak", true)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)
 
 	// Check overall accuracy
 	if accuracy := stats.GetSessionAccuracy(); accuracy != 100.0 {
@@ -56,7 +58,7 @@ func TestRecordCorrectAttempt(t *testing.T) {
 func TestRecordIncorrectAttempt(t *testing.T) {
 	stats := New()
 
-	stats.RecordAttempt("soft", "medium", false)
+	stats.RecordAttempt(strategy.HandTypeSoft, "medium", false)
 
 	// Check overall accuracy
 	if accuracy := stats.GetSessionAccuracy(); accuracy != 0.0 {
@@ -79,10 +81,10 @@ func TestMultipleAttempts(t *testing.T) {
 	stats := New()
 
 	// Record various attempts
-	stats.RecordAttempt("hard", "weak", true)   // 1/1 correct
-	stats.RecordAttempt("hard", "weak", false)  // 1/2 correct
-	stats.RecordAttempt("soft", "strong", true) // 2/3 correct
-	stats.RecordAttempt("pair", "medium", true) // 3/4 correct
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)   // 1/1 correct
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", false)  // 1/2 correct
+	stats.RecordAttempt(strategy.HandTypeSoft, "strong", true) // 2/3 correct
+	stats.RecordAttempt(strategy.HandTypePair, "medium", true) // 3/4 correct
 
 	// Check overall accuracy (75%)
 	if accuracy := stats.GetSessionAccuracy(); accuracy != 75.0 {
@@ -110,10 +112,10 @@ func TestAccuracyCalculations(t *testing.T) {
 	stats := New()
 
 	// Add 3 correct out of 4 attempts for hard totals
-	stats.RecordAttempt("hard", "weak", true)
-	stats.RecordAttempt("hard", "weak", true)
-	stats.RecordAttempt("hard", "weak", true)
-	stats.RecordAttempt("hard", "weak", false)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", false)
 
 	// Check hard accuracy (75%)
 	expected := 75.0
@@ -122,7 +124,7 @@ func TestAccuracyCalculations(t *testing.T) {
 	}
 
 	// Add 1 incorrect attempt for weak dealer
-	stats.RecordAttempt("soft", "weak", false)
+	stats.RecordAttempt(strategy.HandTypeSoft, "weak", false)
 
 	// Check weak dealer accuracy (3 correct out of 5 = 60%)
 	expected = 60.0
@@ -175,7 +177,7 @@ func TestInvalidCategories(t *testing.T) {
 	}
 
 	// Recording to invalid categories should not crash
-	stats.RecordAttempt("invalid", "invalid", true)
+	stats.RecordAttempt(strategy.HandType(99), "invalid", true)
 
 	// Should have 1 attempt overall with 100% accuracy (since the attempt was correct)
 	if accuracy := stats.GetSessionAccuracy(); accuracy != 100.0 {
@@ -188,9 +190,9 @@ func TestResetSession(t *testing.T) {
 	stats := New()
 
 	// Add some attempts
-	stats.RecordAttempt("hard", "weak", true)
-	stats.RecordAttempt("soft", "strong", false)
-	stats.RecordAttempt("pair", "medium", true)
+	stats.RecordAttempt(strategy.HandTypeHard, "weak", true)
+	stats.RecordAttempt(strategy.HandTypeSoft, "strong", false)
+	stats.RecordAttempt(strategy.HandTypePair, "medium", true)
 
 	// Verify we have data
 	if accuracy := stats.GetSessionAccuracy(); accuracy == 0.0 {
@@ -217,5 +219,233 @@ func TestResetSession(t *testing.T) {
 		if accuracy := stats.GetDealerStrengthAccuracy(strength); accuracy != 0.0 {
 			t.Errorf("%s accuracy should be 0.0 after reset, got %f", strength, accuracy)
 		}
+	}
+}
+
+func TestNew(t *testing.T) {
+	tests := []struct {
+		name string
+		want *Statistics
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := New(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("New() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStatistics_DisplayProgress(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			s.DisplayProgress()
+		})
+	}
+}
+
+func TestStatistics_GetCategoryAccuracy(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	type args struct {
+		category string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   float64
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			if got := s.GetCategoryAccuracy(tt.args.category); got != tt.want {
+				t.Errorf("GetCategoryAccuracy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStatistics_GetDealerStrength(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	type args struct {
+		dealerCard int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			if got := s.GetDealerStrength(tt.args.dealerCard); got != tt.want {
+				t.Errorf("GetDealerStrength() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStatistics_GetDealerStrengthAccuracy(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	type args struct {
+		strength string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   float64
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			if got := s.GetDealerStrengthAccuracy(tt.args.strength); got != tt.want {
+				t.Errorf("GetDealerStrengthAccuracy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStatistics_GetSessionAccuracy(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   float64
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			if got := s.GetSessionAccuracy(); got != tt.want {
+				t.Errorf("GetSessionAccuracy() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestStatistics_RecordAttempt(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	type args struct {
+		handType       strategy.HandType
+		dealerStrength string
+		correct        bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			s.RecordAttempt(tt.args.handType, tt.args.dealerStrength, tt.args.correct)
+		})
+	}
+}
+
+func TestStatistics_ResetSession(t *testing.T) {
+	type fields struct {
+		totalAttempts    int
+		correctAnswers   int
+		byCategory       map[string]*CategoryData
+		byDealerStrength map[string]*CategoryData
+	}
+	tests := []struct {
+		name   string
+		fields fields
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &Statistics{
+				totalAttempts:    tt.fields.totalAttempts,
+				correctAnswers:   tt.fields.correctAnswers,
+				byCategory:       tt.fields.byCategory,
+				byDealerStrength: tt.fields.byDealerStrength,
+			}
+			s.ResetSession()
+		})
 	}
 }

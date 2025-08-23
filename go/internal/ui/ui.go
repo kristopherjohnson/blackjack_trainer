@@ -51,7 +51,7 @@ func DisplaySessionHeader(modeName string) {
 }
 
 // DisplayHand displays the current hand and dealer card.
-func DisplayHand(playerCards []int, dealerCard int, handType string, playerTotal int) {
+func DisplayHand(playerCards []int, dealerCard int, handType strategy.HandType, playerTotal int) {
 	fmt.Printf("\nDealer shows: %s\n", strategy.CardToString(dealerCard))
 
 	fmt.Print("Your hand: ")
@@ -62,7 +62,7 @@ func DisplayHand(playerCards []int, dealerCard int, handType string, playerTotal
 		fmt.Print(strategy.CardToString(card))
 	}
 
-	handDesc := strings.Title(handType)
+	handDesc := strings.Title(handType.String())
 	fmt.Printf(" (%s %d)\n", handDesc, playerTotal)
 }
 

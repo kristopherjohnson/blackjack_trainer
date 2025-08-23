@@ -25,14 +25,14 @@ type TrainingSession interface {
 	GetMaxQuestions() int
 	// GenerateScenario generates a scenario for this training mode.
 	// Returns (handType, playerCards, playerTotal, dealerCard).
-	GenerateScenario() (string, []int, int, int)
+	GenerateScenario() (strategy.HandType, []int, int, int)
 	// SetupSession sets up the session. Returns true if setup successful, false if user cancelled.
 	SetupSession() bool
 }
 
 // Scenario represents a training scenario.
 type Scenario struct {
-	HandType    string
+	HandType    strategy.HandType
 	PlayerCards []int
 	PlayerTotal int
 	DealerCard  int
@@ -51,14 +51,14 @@ func NewBaseTrainer() *BaseTrainer {
 }
 
 // GenerateHandCards generates card representation for a hand.
-func (bt *BaseTrainer) GenerateHandCards(handType string, playerTotal int) []int {
+func (bt *BaseTrainer) GenerateHandCards(handType strategy.HandType, playerTotal int) []int {
 	switch handType {
-	case "pair":
+	case strategy.HandTypePair:
 		return []int{playerTotal, playerTotal}
-	case "soft":
+	case strategy.HandTypeSoft:
 		otherCard := playerTotal - 11
 		return []int{11, otherCard}
-	case "hard":
+	case strategy.HandTypeHard:
 		if playerTotal <= 11 {
 			return []int{playerTotal}
 		}
@@ -186,27 +186,27 @@ func (r *RandomTrainingSession) SetupSession() bool {
 }
 
 // GenerateScenario generates a random scenario.
-func (r *RandomTrainingSession) GenerateScenario() (string, []int, int, int) {
+func (r *RandomTrainingSession) GenerateScenario() (strategy.HandType, []int, int, int) {
 	dealerCard := r.rng.Intn(10) + 2 // 2-11
-	handTypes := []string{"hard", "soft", "pair"}
+	handTypes := []strategy.HandType{strategy.HandTypeHard, strategy.HandTypeSoft, strategy.HandTypePair}
 	handType := handTypes[r.rng.Intn(len(handTypes))]
 
 	var playerCards []int
 	var playerTotal int
 
 	switch handType {
-	case "pair":
+	case strategy.HandTypePair:
 		pairValues := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
 		pairValue := pairValues[r.rng.Intn(len(pairValues))]
 		playerCards = []int{pairValue, pairValue}
 		playerTotal = pairValue
-	case "soft":
+	case strategy.HandTypeSoft:
 		otherCard := r.rng.Intn(8) + 2 // 2-9
 		playerCards = []int{11, otherCard}
 		playerTotal = 11 + otherCard
-	case "hard":
+	case strategy.HandTypeHard:
 		playerTotal = r.rng.Intn(16) + 5 // 5-20
-		playerCards = r.GenerateHandCards("hard", playerTotal)
+		playerCards = r.GenerateHandCards(strategy.HandTypeHard, playerTotal)
 	}
 
 	return handType, playerCards, playerTotal, dealerCard
@@ -247,7 +247,7 @@ func (d *DealerGroupTrainingSession) SetupSession() bool {
 }
 
 // GenerateScenario generates a scenario with specific dealer group.
-func (d *DealerGroupTrainingSession) GenerateScenario() (string, []int, int, int) {
+func (d *DealerGroupTrainingSession) GenerateScenario() (strategy.HandType, []int, int, int) {
 	// Select dealer card based on chosen group
 	var dealerCard int
 	switch d.dealerGroup {
@@ -262,25 +262,25 @@ func (d *DealerGroupTrainingSession) GenerateScenario() (string, []int, int, int
 		dealerCard = strongCards[d.rng.Intn(len(strongCards))]
 	}
 
-	handTypes := []string{"hard", "soft", "pair"}
+	handTypes := []strategy.HandType{strategy.HandTypeHard, strategy.HandTypeSoft, strategy.HandTypePair}
 	handType := handTypes[d.rng.Intn(len(handTypes))]
 
 	var playerCards []int
 	var playerTotal int
 
 	switch handType {
-	case "pair":
+	case strategy.HandTypePair:
 		pairValues := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
 		pairValue := pairValues[d.rng.Intn(len(pairValues))]
 		playerCards = []int{pairValue, pairValue}
 		playerTotal = pairValue
-	case "soft":
+	case strategy.HandTypeSoft:
 		otherCard := d.rng.Intn(8) + 2 // 2-9
 		playerCards = []int{11, otherCard}
 		playerTotal = 11 + otherCard
-	case "hard":
+	case strategy.HandTypeHard:
 		playerTotal = d.rng.Intn(16) + 5 // 5-20
-		playerCards = d.GenerateHandCards("hard", playerTotal)
+		playerCards = d.GenerateHandCards(strategy.HandTypeHard, playerTotal)
 	}
 
 	return handType, playerCards, playerTotal, dealerCard
@@ -321,25 +321,25 @@ func (h *HandTypeTrainingSession) SetupSession() bool {
 }
 
 // GenerateScenario generates a scenario with specific hand type.
-func (h *HandTypeTrainingSession) GenerateScenario() (string, []int, int, int) {
+func (h *HandTypeTrainingSession) GenerateScenario() (strategy.HandType, []int, int, int) {
 	dealerCard := h.rng.Intn(10) + 2 // 2-11
 
-	var handType string
+	var handType strategy.HandType
 	var playerCards []int
 	var playerTotal int
 
 	switch h.handTypeChoice {
 	case 1: // Hard totals
-		handType = "hard"
+		handType = strategy.HandTypeHard
 		playerTotal = h.rng.Intn(16) + 5 // 5-20
-		playerCards = h.GenerateHandCards("hard", playerTotal)
+		playerCards = h.GenerateHandCards(strategy.HandTypeHard, playerTotal)
 	case 2: // Soft totals
-		handType = "soft"
+		handType = strategy.HandTypeSoft
 		otherCard := h.rng.Intn(8) + 2 // 2-9
 		playerCards = []int{11, otherCard}
 		playerTotal = 11 + otherCard
 	default: // Pairs
-		handType = "pair"
+		handType = strategy.HandTypePair
 		pairValues := []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
 		pairValue := pairValues[h.rng.Intn(len(pairValues))]
 		playerCards = []int{pairValue, pairValue}
@@ -377,22 +377,22 @@ func (a *AbsoluteTrainingSession) SetupSession() bool {
 }
 
 // GenerateScenario generates a scenario with absolute rules.
-func (a *AbsoluteTrainingSession) GenerateScenario() (string, []int, int, int) {
+func (a *AbsoluteTrainingSession) GenerateScenario() (strategy.HandType, []int, int, int) {
 	absolutes := []struct {
-		handType    string
+		handType    strategy.HandType
 		playerCards []int
 		playerTotal int
 	}{
-		{"pair", []int{11, 11}, 11}, // A,A
-		{"pair", []int{8, 8}, 8},    // 8,8
-		{"pair", []int{10, 10}, 10}, // 10,10
-		{"pair", []int{5, 5}, 5},    // 5,5
-		{"hard", []int{}, 17},       // Hard 17
-		{"hard", []int{}, 18},       // Hard 18
-		{"hard", []int{}, 19},       // Hard 19
-		{"hard", []int{}, 20},       // Hard 20
-		{"soft", []int{11, 8}, 19},  // Soft 19
-		{"soft", []int{11, 9}, 20},  // Soft 20
+		{strategy.HandTypePair, []int{11, 11}, 11}, // A,A
+		{strategy.HandTypePair, []int{8, 8}, 8},    // 8,8
+		{strategy.HandTypePair, []int{10, 10}, 10}, // 10,10
+		{strategy.HandTypePair, []int{5, 5}, 5},    // 5,5
+		{strategy.HandTypeHard, []int{}, 17},       // Hard 17
+		{strategy.HandTypeHard, []int{}, 18},       // Hard 18
+		{strategy.HandTypeHard, []int{}, 19},       // Hard 19
+		{strategy.HandTypeHard, []int{}, 20},       // Hard 20
+		{strategy.HandTypeSoft, []int{11, 8}, 19},  // Soft 19
+		{strategy.HandTypeSoft, []int{11, 9}, 20},  // Soft 20
 	}
 
 	absolute := absolutes[a.rng.Intn(len(absolutes))]

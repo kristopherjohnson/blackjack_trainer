@@ -1,6 +1,7 @@
 package trainer
 
 import (
+	"blackjack_trainer/internal/strategy"
 	"testing"
 )
 
@@ -10,7 +11,7 @@ func TestHandGeneration(t *testing.T) {
 
 	t.Run("PairHandGeneration", func(t *testing.T) {
 		for _, pairValue := range []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11} {
-			cards := baseTrainer.GenerateHandCards("pair", pairValue)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypePair, pairValue)
 
 			if len(cards) != 2 {
 				t.Errorf("Pair %d should have 2 cards, got %d", pairValue, len(cards))
@@ -26,7 +27,7 @@ func TestHandGeneration(t *testing.T) {
 
 	t.Run("SoftHandGeneration", func(t *testing.T) {
 		for softTotal := 13; softTotal <= 21; softTotal++ { // A,2 through A,10 (13-21)
-			cards := baseTrainer.GenerateHandCards("soft", softTotal)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeSoft, softTotal)
 
 			if len(cards) != 2 {
 				t.Errorf("Soft %d should have 2 cards, got %d", softTotal, len(cards))
@@ -63,7 +64,7 @@ func TestHandGeneration(t *testing.T) {
 
 	t.Run("HardHandValidCards", func(t *testing.T) {
 		for total := 5; total <= 21; total++ { // Hard 5-21
-			cards := baseTrainer.GenerateHandCards("hard", total)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, total)
 
 			// All cards must be valid (2-11)
 			for _, card := range cards {
@@ -85,7 +86,7 @@ func TestHandGeneration(t *testing.T) {
 
 	t.Run("HardHandNoAcesForLowTotals", func(t *testing.T) {
 		for total := 5; total <= 10; total++ { // Hard 5-10 (11 can be a single Ace)
-			cards := baseTrainer.GenerateHandCards("hard", total)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, total)
 
 			// For totals 5-10, we shouldn't need aces (would make it soft)
 			for _, card := range cards {
@@ -100,7 +101,7 @@ func TestHandGeneration(t *testing.T) {
 		// Test many iterations to catch edge cases
 		for iteration := 0; iteration < 100; iteration++ {
 			for total := 12; total <= 21; total++ { // Hard 12-21
-				cards := baseTrainer.GenerateHandCards("hard", total)
+				cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, total)
 
 				// All cards must be 2-10 (no aces in hard totals)
 				for _, card := range cards {
@@ -120,7 +121,7 @@ func TestHandGeneration(t *testing.T) {
 	t.Run("EdgeCaseTotals", func(t *testing.T) {
 		// Test hard 20 and 21
 		for _, total := range []int{20, 21} {
-			cards := baseTrainer.GenerateHandCards("hard", total)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, total)
 
 			// Should still be valid
 			sum := 0
@@ -141,7 +142,7 @@ func TestHandGeneration(t *testing.T) {
 
 	t.Run("SingleCardTotals", func(t *testing.T) {
 		for total := 2; total <= 11; total++ { // 2-11
-			cards := baseTrainer.GenerateHandCards("hard", total)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, total)
 
 			if total <= 11 {
 				// Should be single card for low totals
@@ -159,17 +160,17 @@ func TestHandGeneration(t *testing.T) {
 		invalidValues := []int{0, 1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21}
 
 		for iteration := 0; iteration < 200; iteration++ { // Many iterations to catch rare cases
-			for _, handType := range []string{"hard", "soft", "pair"} {
+			for _, handType := range []strategy.HandType{strategy.HandTypeHard, strategy.HandTypeSoft, strategy.HandTypePair} {
 				var totals []int
 
 				switch handType {
-				case "pair":
+				case strategy.HandTypePair:
 					totals = []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-				case "soft":
+				case strategy.HandTypeSoft:
 					for i := 13; i <= 21; i++ {
 						totals = append(totals, i)
 					}
-				case "hard":
+				case strategy.HandTypeHard:
 					for i := 5; i <= 21; i++ {
 						totals = append(totals, i)
 					}
@@ -193,7 +194,7 @@ func TestHandGeneration(t *testing.T) {
 	t.Run("Hard18SpecificCase", func(t *testing.T) {
 		// Test hard 18 many times to ensure no invalid cards
 		for iteration := 0; iteration < 50; iteration++ {
-			cards := baseTrainer.GenerateHandCards("hard", 18)
+			cards := baseTrainer.GenerateHandCards(strategy.HandTypeHard, 18)
 
 			// Should sum to 18
 			sum := 0

@@ -15,6 +15,7 @@
 package stats
 
 import (
+	"blackjack_trainer/internal/strategy"
 	"bufio"
 	"fmt"
 	"os"
@@ -58,14 +59,15 @@ func New() *Statistics {
 }
 
 // RecordAttempt records an attempt in the training session.
-func (s *Statistics) RecordAttempt(handType, dealerStrength string, correct bool) {
+func (s *Statistics) RecordAttempt(handType strategy.HandType, dealerStrength string, correct bool) {
 	s.totalAttempts++
 	if correct {
 		s.correctAnswers++
 	}
 
 	// Record by hand type
-	if category, exists := s.byCategory[handType]; exists {
+	handTypeStr := handType.String()
+	if category, exists := s.byCategory[handTypeStr]; exists {
 		category.Total++
 		if correct {
 			category.Correct++
